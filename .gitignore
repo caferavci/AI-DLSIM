@@ -1,1 +1,10 @@
+# Generated simulation outputs
+outputs/
+# Backup files
+*.bak
+# Python
+__pycache__/
+*.pyc
+*.pyo
+# Virtual Environment
 .venv/
