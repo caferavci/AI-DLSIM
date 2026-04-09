@@ -181,7 +181,7 @@ def resolve_location(user_input: str) -> dict:
       - 'south', 'north', 'west', 'east': float — bounding box
     """
     text = user_input.strip()
-    print(f"\n🔍 Resolving location: '{text}'")
+    print(f"\nResolving location: '{text}'")
 
     if is_zipcode(text):
         print("   ZIP code detected — fetching ZCTA boundary from Census TIGER…")
@@ -190,11 +190,11 @@ def resolve_location(user_input: str) -> dict:
             print(f"   Got polygon ({poly.count(' ') // 2 + 1} points) for ZIP {text}")
             return {"poly": poly, "display_name": f"ZIP {text}"}
         else:
-            print("   ⚠️  TIGER lookup failed — falling back to Nominatim bbox…")
+            print("   [warn] TIGER lookup failed — falling back to Nominatim bbox…")
 
     bbox = bbox_from_nominatim(text + ", USA" if is_zipcode(text) else text)
     if not bbox:
-        print("❌ Could not resolve location to coordinates. Please try a different query.")
+        print("[error] Could not resolve location to coordinates. Please try a different query.")
         sys.exit(1)
 
     print(f"   → {bbox['display_name']}")
@@ -275,7 +275,7 @@ def ask_llm_for_query(client: OpenAI, location: dict,
 
 def run_overpass_query(query: str) -> Optional[requests.Response]:
     """POST the query to the Overpass API. Returns the response or None on HTTP error."""
-    print("\n📡 Sending query to Overpass API…")
+    print("\nSending query to Overpass API…")
     try:
         r = requests.post(
             OVERPASS_URL,
@@ -333,7 +333,7 @@ def main():
     last_error  = None
 
     for attempt in range(1, MAX_QUERY_RETRIES + 1):
-        print(f"\n🤖 Asking {OPENAI_MODEL} to {'generate' if attempt == 1 else 'fix'} "
+        print(f"\nAsking {OPENAI_MODEL} to {'generate' if attempt == 1 else 'fix'} "
               f"the Overpass query (attempt {attempt}/{MAX_QUERY_RETRIES})…")
 
         query = ask_llm_for_query(client, location, previous_error=last_error)
@@ -349,10 +349,10 @@ def main():
 
         error = overpass_error_message(response)
         if error is None:
-            print("✅ Query succeeded!")
+            print("[ok] Query succeeded!")
             break
         else:
-            print(f"⚠️  Query error: {error}")
+            print(f"[warn] Query error: {error}")
             last_error = error
             if attempt < MAX_QUERY_RETRIES:
                 print("   Asking the LLM to fix the query…")
@@ -373,7 +373,7 @@ def main():
     repo_root = pathlib.Path(__file__).resolve().parents[3]
     out_dir = repo_root / "data" / safe_name
     out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"\n📁 Output folder: {out_dir}/")
+    print(f"\nOutput folder: {out_dir}/")
 
     # ── Save .osm file
     output_path = out_dir / f"{safe_name}_roads.osm"
@@ -381,10 +381,10 @@ def main():
         f.write(response.content)
 
     size_mb = len(response.content) / 1_048_576
-    print(f"💾 Saved {size_mb:.2f} MB → {output_path}")
+    print(f"Saved {size_mb:.2f} MB → {output_path}")
 
     # ── Convert .osm → node.csv + link.csv + poi.csv via osm2gmns
-    print("\n⚙️  Converting to node.csv / link.csv / poi.csv via osm2gmns…")
+    print("\nConverting to node.csv / link.csv / poi.csv via osm2gmns…")
     try:
         import osm2gmns as og
 
@@ -403,10 +403,10 @@ def main():
         print(f"   → {out_dir}/poi.csv")
 
     except ImportError:
-        print("⚠️  osm2gmns is not installed. Run:  pip install osm2gmns")
+        print("[warn] osm2gmns is not installed. Run:  pip install osm2gmns")
         print(f"   The .osm file is saved at {output_path}")
     except Exception as e:
-        print(f"⚠️  osm2gmns conversion failed: {e}")
+        print(f"[warn] osm2gmns conversion failed: {e}")
         print(f"   The .osm file is still saved at {output_path}")
 
 
