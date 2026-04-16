@@ -4,6 +4,22 @@ import os
 from typing import Any
 
 
+def _get_llm_client():
+    """Build an OpenAI-compatible client pointing at the LiteLLM proxy."""
+    from openai import OpenAI
+
+    api_key = os.environ.get("LITELLM_API_KEY")
+    base_url = os.environ.get("LITELLM_BASE_URL")
+
+    if not api_key or not base_url:
+        raise RuntimeError(
+            "Missing LITELLM_API_KEY and/or LITELLM_BASE_URL in environment. "
+            "Set them in .env and rerun."
+        )
+
+    return OpenAI(api_key=api_key, base_url=base_url)
+
+
 class LlmResultInterpreter:
     """
     Post-processing agent (Phase 5/6 output side).
@@ -16,24 +32,8 @@ class LlmResultInterpreter:
         self.model = model
 
     def interpret(self, *, user_query: str, dlsim_result: dict[str, Any]) -> str:
-        if self.model != "openai.gpt-5-mini":
-            raise NotImplementedError(
-                f"Provider/model '{self.model}' not wired yet. "
-                "Baseline currently supports 'openai.gpt-5-mini' only."
-            )
+        client = _get_llm_client()
 
-        api_key = os.environ.get("OPENAI_API_KEY")
-        if not api_key:
-            raise RuntimeError(
-                "Missing OPENAI_API_KEY in environment. "
-                "Set it (e.g., export OPENAI_API_KEY=...) and rerun."
-            )
-
-        from openai import OpenAI
-
-        client = OpenAI(api_key=api_key)
-
-        # Keep the prompt grounded: only reference fields that exist.
         concise_system_prompt = (
             "You are an assistant interpreting dynamic traffic simulation results. "
             "Produce a concise answer to the user.\n\n"
@@ -52,7 +52,7 @@ class LlmResultInterpreter:
         )
 
         resp = client.chat.completions.create(
-            model="gpt-5-mini",
+            model=self.model,
             messages=[
                 {"role": "system", "content": concise_system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -61,4 +61,3 @@ class LlmResultInterpreter:
         )
 
         return resp.choices[0].message.content or ""
-

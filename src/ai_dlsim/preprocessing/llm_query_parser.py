@@ -16,26 +16,38 @@ ModelName = Literal[
 ]
 
 
+def _get_llm_client():
+    """Build an OpenAI-compatible client pointing at the LiteLLM proxy."""
+    from openai import OpenAI
+
+    api_key = os.environ.get("LITELLM_API_KEY")
+    base_url = os.environ.get("LITELLM_BASE_URL")
+
+    if not api_key or not base_url:
+        raise RuntimeError(
+            "Missing LITELLM_API_KEY and/or LITELLM_BASE_URL in environment. "
+            "Set them in .env and rerun."
+        )
+
+    return OpenAI(api_key=api_key, base_url=base_url)
+
+
 class LlmQueryParser:
     """
     Pre-processing agent (Phase 5).
 
     Responsible only for:
       Natural language query -> structured QueryRequest (JSON)
-
-    It intentionally does NOT generate GMNS/DLSim inputs yet.
     """
 
     def __init__(self, *, model: ModelName = "openai.gpt-5-mini") -> None:
         self.model = model
 
     def _parse_json_only(self, raw: str) -> dict[str, Any]:
-        # Some providers may wrap JSON in extra text; we try to recover.
         raw = raw.strip()
         try:
             return json.loads(raw)
         except json.JSONDecodeError:
-            # Try to extract the first {...} block.
             start = raw.find("{")
             end = raw.rfind("}")
             if start == -1 or end == -1 or end <= start:
@@ -43,25 +55,8 @@ class LlmQueryParser:
             return json.loads(raw[start : end + 1])
 
     def parse(self, user_query: str) -> QueryRequest:
-        if self.model != "openai.gpt-5-mini":
-            raise NotImplementedError(
-                f"Provider/model '{self.model}' not wired yet. "
-                "Baseline currently supports 'openai.gpt-5-mini' only."
-            )
+        client = _get_llm_client()
 
-        api_key = os.environ.get("OPENAI_API_KEY")
-        if not api_key:
-            raise RuntimeError(
-                "Missing OPENAI_API_KEY in environment. "
-                "Set it (e.g., export OPENAI_API_KEY=...) and rerun."
-            )
-
-        # Import lazily so users can still run non-LLM parts without installing OpenAI SDK.
-        from openai import OpenAI
-
-        client = OpenAI(api_key=api_key)
-
-        # Strict JSON output contract: return ONLY a JSON object.
         schema_example = {
             "region": "Ithaca, NY",
             "origin": "Cornell University",
@@ -94,10 +89,8 @@ class LlmQueryParser:
             "Now output the JSON object."
         )
 
-        # Using Responses API-like behavior, but we keep it robust by using a generic call.
-        # If your installed OpenAI SDK differs, adjust the client call accordingly.
         resp = client.chat.completions.create(
-            model="gpt-5-mini",
+            model=self.model,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -108,7 +101,6 @@ class LlmQueryParser:
         raw_text = resp.choices[0].message.content or ""
         obj = self._parse_json_only(raw_text)
 
-        # Map to QueryRequest; tolerate minor key mismatches by normalizing.
         normalized = {
             "region": obj.get("region"),
             "origin": obj.get("origin"),
@@ -118,13 +110,10 @@ class LlmQueryParser:
             "scenario": obj.get("scenario") or "baseline",
         }
 
-        # Basic validation for required field.
         if not normalized["region"]:
             raise ValueError("LLM did not provide a required 'region' field.")
 
-        # dataclass expects Optional[str] for nullable fields; JSON null maps to None.
         return QueryRequest(**normalized)
 
     def to_debug_dict(self, request: QueryRequest) -> dict[str, Any]:
         return asdict(request)
-
