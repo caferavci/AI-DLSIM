@@ -15,7 +15,6 @@ Usage:
 import sys
 import pathlib
 
-# ── make sibling modules and the ai_dlsim package importable when run directly
 _here = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(_here.parent))           # preprocessing siblings
 sys.path.insert(0, str(_here.parents[2]))       # src/ → ai_dlsim package
@@ -63,7 +62,6 @@ def main() -> None:
     print("  DLSim-MRM Preprocessing Pipeline")
     print("=" * 60)
 
-    # ── Parse: natural language → QueryRequest ────────────────────────────────
     user_query = input("\nDescribe your simulation scenario: ").strip()
     if not user_query:
         print("No input provided. Exiting.")
@@ -83,7 +81,6 @@ def main() -> None:
     repo_root = _here.parents[3]
     data_dir = repo_root / "data" / _safe_name(region)
 
-    # ── Step 1: retrieve CSVs ─────────────────────────────────────────────────
     print("\n" + "─" * 60)
     print("  Step 1/3 — Fetching OSM data and generating CSVs")
     print("─" * 60)
@@ -141,19 +138,16 @@ def main() -> None:
         print(f"[warn] osm2gmns conversion failed: {e}")
         sys.exit(1)
 
-    # ── Step 2: run grid2demand ───────────────────────────────────────────────
     print("\n" + "─" * 60)
     print("  Step 2/3 — Generating demand via grid2demand")
     print("─" * 60)
     _g2d.run(str(data_dir))
 
-    # ── Step 3: generate settings.csv ────────────────────────────────────────
     print("\n" + "─" * 60)
     print("  Step 3/3 — Generating settings.csv")
     print("─" * 60)
     _gs.run(str(data_dir), demand_period=demand_period, time_period=time_period)
 
-    # ── done ──────────────────────────────────────────────────────────────────
     demand_dir = data_dir.parent / f"{data_dir.name}_demand"
     print("\n" + "=" * 60)
     print("  Pipeline complete.")
