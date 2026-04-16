@@ -35,15 +35,15 @@ _gen_zone.get_lng_lat_min_max = _fixed_get_lng_lat_min_max
 def run(input_folder: str) -> None:
     input_dir = pathlib.Path(input_folder).resolve()
     if not input_dir.is_dir():
-        print(f"❌ Directory not found: {input_dir}")
+        print(f"[error] Directory not found: {input_dir}")
         sys.exit(1)
 
     output_dir = input_dir.parent / f"{input_dir.name}_demand"
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
-    print(f"📂 Input : {input_dir}")
-    print(f"📂 Output: {output_dir}\n")
+    print(f"Input : {input_dir}")
+    print(f"Output: {output_dir}\n")
 
     net = gd.GRID2DEMAND(input_dir=str(input_dir), output_dir=str(output_dir))
     network = net.load_network
@@ -62,7 +62,7 @@ def run(input_folder: str) -> None:
     net.save_zone
     net.save_zone_od_dist_table
 
-    print(f"\n✅ Done. Outputs written to: {output_dir}")
+    print(f"\n[ok] Done. Outputs written to: {output_dir}")
 
 
 if __name__ == "__main__":
