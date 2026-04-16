@@ -14,6 +14,7 @@ Usage:
 
 import sys
 import pathlib
+from typing import Optional, Tuple
 
 _here = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(_here.parent))           # preprocessing siblings
@@ -36,7 +37,7 @@ def _safe_name(user_input: str) -> str:
     )[:50]
 
 
-def _departure_time_to_period(departure_time: str | None) -> tuple[str, str]:
+def _departure_time_to_period(departure_time: Optional[str]) -> Tuple[str, str]:
     """
     Map a HH:MM departure time to a (period_label, time_window) pair.
     Returns AM / 0700_0800 if departure_time is None or unrecognised.
@@ -67,15 +68,24 @@ def main() -> None:
         print("No input provided. Exiting.")
         sys.exit(0)
 
-    print("\nParsing query…")
-    request = LlmQueryParser().parse(user_query)
-    print(f"   region          : {request.region}")
-    print(f"   departure_time  : {request.departure_time}")
-    print(f"   mode            : {request.mode}")
-    print(f"   scenario        : {request.scenario}")
+    # If the input is (or contains) a bare ZIP code, use it directly so the
+    # ZCTA polygon path in resolve_location fires correctly.
+    zip_match = next((w for w in user_query.split() if w.isdigit() and len(w) == 5), None)
+    if zip_match:
+        print(f"\nZIP code detected ({zip_match}), skipping LLM parse.")
+        region = zip_match
+        departure_time = None
+    else:
+        print("\nParsing query…")
+        request = LlmQueryParser().parse(user_query)
+        print(f"   region          : {request.region}")
+        print(f"   departure_time  : {request.departure_time}")
+        print(f"   mode            : {request.mode}")
+        print(f"   scenario        : {request.scenario}")
+        region = request.region
+        departure_time = request.departure_time
 
-    region = request.region
-    demand_period, time_period = _departure_time_to_period(request.departure_time)
+    demand_period, time_period = _departure_time_to_period(departure_time)
     print(f"   → demand period : {demand_period} ({time_period})")
 
     repo_root = _here.parents[3]
@@ -123,30 +133,17 @@ def main() -> None:
         f.write(response.content)
     print(f"Saved {len(response.content) / 1_048_576:.2f} MB → {osm_path}")
 
-    print("\nConverting to node.csv / link.csv / poi.csv via osm2gmns…")
-    try:
-        import osm2gmns as og
-        net = og.getNetFromFile(str(osm_path), mode_types="auto", POI=True)
-        og.consolidateComplexIntersections(net, auto_identify=True)
-        og.generateNodeActivityInfo(net)
-        og.outputNetToCSV(net, output_folder=str(data_dir))
-        print(f"[ok] CSVs written to: {data_dir}/")
-    except ImportError:
-        print("[warn] osm2gmns is not installed. Run:  pip install osm2gmns")
-        sys.exit(1)
-    except Exception as e:
-        print(f"[warn] osm2gmns conversion failed: {e}")
-        sys.exit(1)
+    _rc.build_multiresolution_nets(osm_path, data_dir)
 
     print("\n" + "─" * 60)
     print("  Step 2/3 — Generating demand via grid2demand")
     print("─" * 60)
-    _g2d.run(str(data_dir))
+    _g2d.run(str(data_dir / "macronet"))
 
     print("\n" + "─" * 60)
     print("  Step 3/3 — Generating settings.csv")
     print("─" * 60)
-    _gs.run(str(data_dir), demand_period=demand_period, time_period=time_period)
+    _gs.run(str(data_dir / "macronet"), demand_period=demand_period, time_period=time_period)
 
     demand_dir = data_dir.parent / f"{data_dir.name}_demand"
     print("\n" + "=" * 60)

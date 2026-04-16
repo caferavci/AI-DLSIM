@@ -1,0 +1,31 @@
+[assignment],assignment_mode,column_generation_iterations,column_updating_iterations,odme_iterations,simulation_iterations,number_of_memory_blocks
+,dta,20,20,400,0,4
+
+[agent_type],agent_type,name,,vot,flow_type,pce,occ
+,sov,passenger,,10,0,1,1
+,hov2,HOV2,,10,0,2,2
+,hov3,HOV3,,10,0,1,3.5
+,sut,Single-Unit Trucks,,10,0,1,1
+,mut,Multi-Unit Trucks,,10,0,4,1
+
+[link_type],link_type,link_type_name,,agent_type_blocklist,type_code,traffic_flow_code,vdf_type
+,1,motorway,,,f,0,qvdf
+,2,trunk,,,f,0,qvdf
+,3,primary,,,a,0,qvdf
+,4,secondary,,,a,0,qvdf
+,5,tertiary,,,a,0,qvdf
+,6,residential,,,a,0,qvdf
+,8,service,,,a,0,qvdf
+,15,unclassified,,,a,0,qvdf
+
+[demand_period],demand_period_id,demand_period,,time_period
+,1,AM,,0700_0800
+
+[demand_file_list],file_sequence_no,file_name,,format_type,demand_period,agent_type,loading_scale_factor
+,1,demand.csv,,column,AM,sov,1
+
+[output_file_configuration],,path_output,major_path_volume_threshold,trajectory_output,trajectory_sampling_rate,trajectory_diversion_only,,td_link_performance_sampling_interval_in_min,td_link_performance_sampling_interval_hd_in_min
+,,1,0.0001,1,1,0,,60,15
+
+[metric],,speed_mph_flag
+,,1

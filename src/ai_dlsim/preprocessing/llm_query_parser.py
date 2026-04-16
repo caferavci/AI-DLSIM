@@ -97,12 +97,11 @@ class LlmQueryParser:
         # Using Responses API-like behavior, but we keep it robust by using a generic call.
         # If your installed OpenAI SDK differs, adjust the client call accordingly.
         resp = client.chat.completions.create(
-            model="gpt-5-mini",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.0,
         )
 
         raw_text = resp.choices[0].message.content or ""

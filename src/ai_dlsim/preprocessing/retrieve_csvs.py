@@ -3,6 +3,7 @@
 
 import os
 import sys
+import shutil
 import json
 import time
 import pathlib
@@ -44,11 +45,10 @@ OVERPASS QL RULES YOU MUST FOLLOW:
    OR you can inline the bbox directly:  way[...](south,west,north,east);
 7. node and relation statements must mirror the way statement when using >; to resolve geometry.
 8. DO NOT use Overpass Turbo macros like {{bbox}} — raw coordinates only.
-
 MINIMAL CORRECT TEMPLATE (bbox):
 [out:xml][timeout:120];
 (
-  way["highway"~"motorway|trunk|primary|secondary|tertiary|unclassified|residential"](S,W,N,E);
+  way["highway"~"motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link|living_street|service|road"](S,W,N,E);
   node(w);
   relation["highway"](S,W,N,E);
   node["amenity"](S,W,N,E);
@@ -69,15 +69,26 @@ out skel qt;
 Replace S,W,N,E with actual decimal-degree numbers (no quotes, no spaces inside parentheses beyond the commas).
 
 POLYGON FILTER (use instead of bbox when an exact boundary polygon is available):
-  way["highway"~"..."](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
+[out:xml][timeout:120];
+(
+  way["highway"~"motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link|living_street|service|road"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
   node(w);
   relation["highway"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
   node["amenity"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
   node["shop"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
   node["building"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
+  node["leisure"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
+  node["tourism"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
   way["amenity"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
   way["shop"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
   way["building"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
+  way["leisure"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
+  way["tourism"](poly:"lat1 lon1 lat2 lon2 lat3 lon3 ...");
+);
+out body;
+>;
+out skel qt;
+
 The poly value is a space-separated string of alternating lat lon pairs (no commas between pairs).
 """
 
@@ -306,6 +317,47 @@ def overpass_error_message(response: requests.Response) -> Optional[str]:
     return f"HTTP {response.status_code}: {response.text[:300]}"
 
 
+# ── osm2gmns conversion ───────────────────────────────────────────────────────
+
+def build_multiresolution_nets(osm_path: pathlib.Path, out_dir: pathlib.Path) -> None:
+    """Convert an .osm file to macro/meso/micro networks via osm2gmns."""
+    print("\nConverting OSM data to macro / meso / micro networks via osm2gmns…")
+    try:
+        import osm2gmns as og
+
+        net = og.getNetFromFile(
+            str(osm_path),
+            network_types=("auto",),
+            POI=True,
+            default_lanes=True,
+            default_speed=True,
+            default_capacity=True,
+        )
+        og.consolidateComplexIntersections(net, auto_identify=True)
+        og.generateNodeActivityInfo(net)
+        og.buildMultiResolutionNets(net)
+        og.outputNetToCSV(net, output_folder=str(out_dir))
+
+        # Copy macro files into macronet/ to match meso/micro layout
+        macro_dir = out_dir / "macronet"
+        macro_dir.mkdir(exist_ok=True)
+        for fname in ("node.csv", "link.csv", "movement.csv", "poi.csv"):
+            src = out_dir / fname
+            if src.exists():
+                shutil.copy2(src, macro_dir / fname)
+
+        print(f"   [ok] macronet → {out_dir}/macronet/")
+        print(f"   [ok] mesonet  → {out_dir}/mesonet/")
+        print(f"   [ok] micronet → {out_dir}/micronet/")
+
+    except ImportError:
+        print("[warn] osm2gmns is not installed. Run:  pip install osm2gmns==0.7.5")
+        print(f"   The .osm file is saved at {osm_path}")
+    except Exception as e:
+        print(f"[warn] osm2gmns conversion failed: {e}")
+        print(f"   The .osm file is still saved at {osm_path}")
+
+
 # ── Main flow ─────────────────────────────────────────────────────────────────
 
 def main():
@@ -383,31 +435,8 @@ def main():
     size_mb = len(response.content) / 1_048_576
     print(f"Saved {size_mb:.2f} MB → {output_path}")
 
-    # ── Convert .osm → node.csv + link.csv + poi.csv via osm2gmns
-    print("\nConverting to node.csv / link.csv / poi.csv via osm2gmns…")
-    try:
-        import osm2gmns as og
-
-        net = og.getNetFromFile(
-            str(output_path),
-            mode_types="auto",
-            POI=True,                # enables poi.csv generation
-        )
-        og.consolidateComplexIntersections(net, auto_identify=True)
-        og.generateNodeActivityInfo(net)
-        og.outputNetToCSV(net, output_folder=str(out_dir))
-
-        print("Conversion complete:")
-        print(f"   → {out_dir}/node.csv")
-        print(f"   → {out_dir}/link.csv")
-        print(f"   → {out_dir}/poi.csv")
-
-    except ImportError:
-        print("[warn] osm2gmns is not installed. Run:  pip install osm2gmns")
-        print(f"   The .osm file is saved at {output_path}")
-    except Exception as e:
-        print(f"[warn] osm2gmns conversion failed: {e}")
-        print(f"   The .osm file is still saved at {output_path}")
+    # ── Convert .osm → macro / meso / micro networks via osm2gmns
+    build_multiresolution_nets(output_path, out_dir)
 
 
 if __name__ == "__main__":
