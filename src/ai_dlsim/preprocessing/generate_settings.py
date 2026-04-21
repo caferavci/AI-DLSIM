@@ -5,8 +5,8 @@ Generates settings.csv for DLSim-MRM from a preprocessed data folder.
 
 Reads link.csv to discover which link types are present, then writes settings.csv
 into the sibling <folder>_demand directory (where demand.csv from run_grid2demand.py
-lives).  Also copies node.csv and link.csv there so the _demand folder is a
-complete, self-contained DLSim-MRM input package.
+lives).  Also writes node.csv with zone_ids aligned to grid2demand's zones, and a
+DLSim-compatible zone.csv.
 
 Usage:
     python generate_settings.py
@@ -40,9 +40,9 @@ LINK_TYPE_CODES: dict[int, tuple[str, str]] = {
 }
 
 
-def read_link_types(link_csv: pathlib.Path) -> list[tuple[int, str, str]]:
+def read_link_types(link_csv: pathlib.Path) -> list:
     """Return sorted list of (link_type_id, name, type_code) found in link.csv."""
-    seen: dict[int, str] = {}
+    seen = {}
     with open(link_csv, newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -61,13 +61,8 @@ def read_link_types(link_csv: pathlib.Path) -> list[tuple[int, str, str]]:
     return result
 
 
-def write_settings_csv(
-    out_path: pathlib.Path,
-    link_types: list[tuple[int, str, str]],
-    demand_period: str,
-    time_period: str,
-) -> None:
-    rows: list[list[str]] = []
+def write_settings_csv(out_path, link_types, demand_period, time_period):
+    rows = []
 
     # [assignment]
     rows.append([
@@ -79,15 +74,8 @@ def write_settings_csv(
     rows.append([])
 
     # [agent_type]
-    rows.append([
-        "[agent_type]", "agent_type", "name", "", "vot",
-        "flow_type", "pce", "occ",
-    ])
-    rows.append(["", "sov",  "passenger",          "", "10", "0", "1",   "1"])
-    rows.append(["", "hov2", "HOV2",               "", "10", "0", "2",   "2"])
-    rows.append(["", "hov3", "HOV3",               "", "10", "0", "1",   "3.5"])
-    rows.append(["", "sut",  "Single-Unit Trucks", "", "10", "0", "1",   "1"])
-    rows.append(["", "mut",  "Multi-Unit Trucks",  "", "10", "0", "4",   "1"])
+    rows.append(["[agent_type]", "agent_type", "name", "", "vot", "flow_type", "pce", "occ"])
+    rows.append(["", "auto", "passenger", "", "10", "0", "1", "1"])
     rows.append([])
 
     # [link_type]
@@ -109,7 +97,7 @@ def write_settings_csv(
         "[demand_file_list]", "file_sequence_no", "file_name", "",
         "format_type", "demand_period", "agent_type", "loading_scale_factor",
     ])
-    rows.append(["", "1", "demand.csv", "", "column", demand_period, "sov", "1"])
+    rows.append(["", "1", "demand.csv", "", "column", demand_period, "auto", "1"])
     rows.append([])
 
     # [output_file_configuration]
@@ -128,11 +116,113 @@ def write_settings_csv(
     rows.append(["", "", "1"])
 
     with open(out_path, "w", newline="") as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, lineterminator="\n")
         writer.writerows(rows)
 
 
-def run(input_folder: str, demand_period: str = "AM", time_period: str = "0700_0800") -> None:
+def _align_zones_to_network(demand_dir, input_dir):
+    """
+    Reconcile grid2demand zone IDs with the road network.
+
+    grid2demand creates its own grid-based zone IDs (0, 1, 2...) that don't
+    match what osm2gmns put in node.csv.  This reads grid2demand's zone.csv
+    (centroid locations) and demand.csv (which zone IDs are actually used),
+    then finds the nearest network node for each demand zone and writes an
+    updated node.csv where those nodes carry the grid2demand zone_ids.
+    DTALite can then route demand correctly.
+    """
+    g2d_zone_csv = demand_dir / "zone.csv"
+    demand_csv = demand_dir / "demand.csv"
+    src_node_csv = input_dir / "node.csv"
+
+    if not g2d_zone_csv.exists() or not src_node_csv.exists():
+        print("[warn] zone.csv or node.csv missing — skipping zone alignment, copying node.csv as-is")
+        shutil.copy2(src_node_csv, demand_dir / "node.csv")
+        return
+
+    # Load grid2demand zone centroids
+    zone_centroids = {}
+    with open(g2d_zone_csv, newline="") as f:
+        for row in csv.DictReader(f):
+            try:
+                zid = int(row["id"].strip())
+                cx = float(row["centroid_x"].strip())
+                cy = float(row["centroid_y"].strip())
+                zone_centroids[zid] = (cx, cy)
+            except (ValueError, KeyError):
+                continue
+
+    # Find which zone IDs are actually referenced in demand.csv
+    demand_zone_ids = set()
+    if demand_csv.exists():
+        with open(demand_csv, newline="") as f:
+            for row in csv.DictReader(f):
+                try:
+                    demand_zone_ids.add(int(row["o_zone_id"]))
+                    demand_zone_ids.add(int(row["d_zone_id"]))
+                except (ValueError, KeyError):
+                    pass
+
+    zones_to_map = {z: zone_centroids[z] for z in demand_zone_ids if z in zone_centroids}
+
+    # Read all network nodes
+    with open(src_node_csv, newline="") as f:
+        reader = csv.DictReader(f)
+        fieldnames = list(reader.fieldnames)
+        nodes = [dict(r) for r in reader]
+
+    # For each demand zone, find nearest network node
+    node_zone = {}  # node_id -> zone_id
+    for zone_id, (cx, cy) in zones_to_map.items():
+        best_id, best_dist = None, float("inf")
+        for node in nodes:
+            try:
+                nx = float(node.get("x_coord") or 0)
+                ny = float(node.get("y_coord") or 0)
+                d = (nx - cx) ** 2 + (ny - cy) ** 2
+                if d < best_dist:
+                    best_dist = d
+                    best_id = node.get("node_id", "")
+            except (ValueError, TypeError):
+                continue
+        if best_id is not None:
+            node_zone[best_id] = zone_id
+
+    # Write updated node.csv: clear old zone_ids, assign grid2demand ones
+    out_node = demand_dir / "node.csv"
+    with open(out_node, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
+        writer.writeheader()
+        for node in nodes:
+            nid = node.get("node_id", "")
+            node["zone_id"] = str(node_zone[nid]) if nid in node_zone else ""
+            writer.writerow(node)
+
+    print(f"[ok] node.csv written — {len(node_zone)} zone centroids aligned to network nodes")
+
+
+def _write_zone_csv(node_csv, out_path):
+    """Write zone.csv in DLSim format from node.csv zone_id column."""
+    zones = {}
+    if node_csv.exists():
+        with open(node_csv, newline="") as f:
+            for row in csv.DictReader(f):
+                raw = row.get("zone_id", "").strip()
+                if raw and raw.isdigit():
+                    zid = int(raw)
+                    if zid > 0:
+                        nid = row.get("node_id", "").strip()
+                        if nid:
+                            zones.setdefault(zid, nid)
+    with open(out_path, "w", newline="") as f:
+        writer = csv.writer(f, lineterminator="\n")
+        writer.writerow(["zone_id", "x_coord", "y_coord", "access_node_vector"])
+        for zone_id, node_id in sorted(zones.items()):
+            writer.writerow([zone_id, "", "", node_id])
+    print(f"[ok] zone.csv written ({len(zones)} zones)")
+
+
+def run(input_folder, demand_period="AM", time_period="0700_0800"):
     input_dir = pathlib.Path(input_folder).resolve()
     if not input_dir.is_dir():
         print(f"[error] Directory not found: {input_dir}")
@@ -143,21 +233,21 @@ def run(input_folder: str, demand_period: str = "AM", time_period: str = "0700_0
         print(f"[error] link.csv not found in {input_dir}")
         sys.exit(1)
 
-    # Output goes to the sibling _demand folder produced by run_grid2demand.py
     demand_dir = input_dir.parent / f"{input_dir.name}_demand"
     if not demand_dir.exists():
         print(f"[warn] Demand folder not found: {demand_dir}")
         print("   Creating it now (run run_grid2demand.py first to populate demand.csv)")
         demand_dir.mkdir(parents=True)
 
-    # Copy node.csv and link.csv so the _demand folder is a complete DLSim input package
-    for fname in ("node.csv", "link.csv"):
-        src = input_dir / fname
-        if src.exists():
-            shutil.copy2(src, demand_dir / fname)
-            print(f"Copied {fname} → {demand_dir.name}/")
-        else:
-            print(f"[warn] {fname} not found in {input_dir} — skipping copy")
+    # Copy link.csv
+    shutil.copy2(link_csv, demand_dir / "link.csv")
+    print(f"Copied link.csv → {demand_dir.name}/")
+
+    # Align grid2demand zones to network nodes, write node.csv
+    _align_zones_to_network(demand_dir, input_dir)
+
+    # Write DLSim zone.csv from the updated node.csv
+    _write_zone_csv(demand_dir / "node.csv", demand_dir / "zone.csv")
 
     link_types = read_link_types(link_csv)
     print(
@@ -169,25 +259,18 @@ def run(input_folder: str, demand_period: str = "AM", time_period: str = "0700_0
     write_settings_csv(settings_path, link_types, demand_period, time_period)
     print(f"[ok] settings.csv written to: {settings_path}")
     print(f"\nDLSim-MRM input package: {demand_dir}/")
-    print("   node.csv, link.csv, demand.csv, settings.csv")
+    print("   node.csv, link.csv, demand.csv, zone.csv, settings.csv")
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Generate settings.csv for DLSim-MRM")
-    parser.add_argument(
-        "folder", nargs="?", default=None,
-        help="Input folder containing node.csv and link.csv (e.g. data/14850)"
-    )
-    parser.add_argument(
-        "--period", default="AM",
-        help="Demand period label (default: AM)"
-    )
-    parser.add_argument(
-        "--time", default="0700_0800",
-        help="Time window in HHMM_HHMM format (default: 0700_0800)"
-    )
+    parser.add_argument("folder", nargs="?", default=None,
+                        help="Input folder containing node.csv and link.csv (e.g. data/14850)")
+    parser.add_argument("--period", default="AM", help="Demand period label (default: AM)")
+    parser.add_argument("--time", default="0700_0800",
+                        help="Time window in HHMM_HHMM format (default: 0700_0800)")
     args = parser.parse_args()
 
     folder = args.folder
