@@ -16,9 +16,12 @@ from openai import OpenAI
 OPENAI_API_KEY   = os.environ.get("OPENAI_API_KEY", "")
 OPENAI_MODEL     = "gpt-4o"
 
-OVERPASS_URL     = "https://overpass-api.de/api/interpreter"
+OVERPASS_URLS = [
+    "https://overpass-api.de/api/interpreter",
+    "https://lz4.overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+]
 NOMINATIM_URL    = "https://nominatim.openstreetmap.org/search"
-TIGER_URL        = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/2/query"
 
 MAX_QUERY_RETRIES    = 3   # How many times to ask the LLM to fix a bad query
 OVERPASS_TIMEOUT_SEC = 120 # Overpass server-side timeout (injected into query)
@@ -99,58 +102,6 @@ def is_zipcode(text: str) -> bool:
     return text.strip().isdigit() and len(text.strip()) == 5
 
 
-def polygon_from_census_tiger(zipcode: str) -> Optional[str]:
-    """
-    Fetch the ZCTA boundary polygon from the Census TIGERweb REST API.
-    Returns a space-separated "lat lon lat lon ..." string for Overpass poly:,
-    or None if the lookup fails.
-    """
-    params = {
-        "where":          f"ZCTA5='{zipcode}'",
-        "outFields":      "ZCTA5",
-        "outSR":          "4326",   # WGS-84 lon/lat
-        "f":              "geojson",
-        "returnGeometry": "true",
-    }
-    print(f"  [TIGER] Requesting URL: {TIGER_URL}")
-    print(f"  [TIGER] Params: {params}")
-    try:
-        r = requests.get(TIGER_URL, params=params, timeout=20)
-        print(f"  [TIGER] HTTP status: {r.status_code}")
-        print(f"  [TIGER] Response (first 500 chars): {r.text[:500]}")
-        r.raise_for_status()
-        data = r.json()
-        features = data.get("features", [])
-        print(f"  [TIGER] Features returned: {len(features)}")
-        if not features:
-            print("  [TIGER] No features found for this ZIP code.")
-            return None
-        geometry = features[0]["geometry"]
-        print(f"  [TIGER] Geometry type: {geometry['type']}")
-        # GeoJSON coordinates are [lon, lat]; Overpass poly: wants "lat lon" pairs
-        if geometry["type"] == "Polygon":
-            rings = geometry["coordinates"]
-        elif geometry["type"] == "MultiPolygon":
-            # Use the largest ring by point count
-            rings = max(geometry["coordinates"], key=lambda mp: len(mp[0]))
-        else:
-            print(f"  [TIGER] Unexpected geometry type: {geometry['type']}")
-            return None
-        outer_ring = rings[0]
-        print(f"  [TIGER] Outer ring point count: {len(outer_ring)}")
-        # Downsample if very large (Overpass poly: has a ~1000-point practical limit)
-        if len(outer_ring) > 500:
-            step = len(outer_ring) // 500
-            outer_ring = outer_ring[::step]
-            print(f"  [TIGER] Downsampled to {len(outer_ring)} points")
-        poly_str = " ".join(f"{lat} {lon}" for lon, lat in outer_ring)
-        return poly_str
-    except Exception as e:
-        import traceback
-        print(f"  [TIGER error] {e}")
-        traceback.print_exc()
-    return None
-
 
 def bbox_from_nominatim(location: str) -> Optional[dict]:
     """Ask Nominatim (OSM) to geocode a free-text location."""
@@ -193,15 +144,6 @@ def resolve_location(user_input: str) -> dict:
     """
     text = user_input.strip()
     print(f"\nResolving location: '{text}'")
-
-    if is_zipcode(text):
-        print("   ZIP code detected — fetching ZCTA boundary from Census TIGER…")
-        poly = polygon_from_census_tiger(text)
-        if poly:
-            print(f"   Got polygon ({poly.count(' ') // 2 + 1} points) for ZIP {text}")
-            return {"poly": poly, "display_name": f"ZIP {text}"}
-        else:
-            print("   [warn] TIGER lookup failed — falling back to Nominatim bbox…")
 
     bbox = bbox_from_nominatim(text + ", USA" if is_zipcode(text) else text)
     if not bbox:
@@ -285,21 +227,52 @@ def ask_llm_for_query(client: OpenAI, location: dict,
 # ── Overpass query execution ──────────────────────────────────────────────────
 
 def run_overpass_query(query: str) -> Optional[requests.Response]:
-    """POST the query to the Overpass API. Returns the response or None on HTTP error."""
-    print("\nSending query to Overpass API…")
-    try:
-        r = requests.post(
-            OVERPASS_URL,
-            data={"data": query},
-            timeout=OVERPASS_TIMEOUT_SEC + 30,  # local timeout > server timeout
-        )
-        return r
-    except requests.exceptions.Timeout:
-        print("  [Error] Request timed out.")
-        return None
-    except requests.exceptions.ConnectionError as e:
-        print(f"  [Error] Connection failed: {e}")
-        return None
+    """
+    POST the query to the Overpass API via curl (bypasses Python LibreSSL issues),
+    trying each endpoint until one succeeds.
+    Returns a minimal Response-like object with .status_code, .content, and .text.
+    """
+    import subprocess
+
+    class _CurlResponse:
+        def __init__(self, status_code: int, content: bytes):
+            self.status_code = status_code
+            self.content = content
+            self.text = content.decode("utf-8", errors="replace")
+
+    for url in OVERPASS_URLS:
+        print(f"\nSending query to {url} …")
+        try:
+            result = subprocess.run(
+                [
+                    "curl", "-s", "-w", "\n__HTTP_STATUS__%{http_code}",
+                    "-X", "POST", url,
+                    "--data-urlencode", f"data={query}",
+                    "--max-time", str(OVERPASS_TIMEOUT_SEC + 30),
+                ],
+                capture_output=True,
+                timeout=OVERPASS_TIMEOUT_SEC + 60,
+            )
+            raw = result.stdout
+            # Split body and status code appended by -w
+            marker = b"\n__HTTP_STATUS__"
+            if marker in raw:
+                body, status_str = raw.rsplit(marker, 1)
+                status_code = int(status_str.strip())
+            else:
+                body = raw
+                status_code = 0
+
+            if status_code == 200:
+                return _CurlResponse(200, body)
+            print(f"  [warn] {url} returned HTTP {status_code} — trying next endpoint…")
+        except subprocess.TimeoutExpired:
+            print(f"  [warn] {url} timed out — trying next endpoint…")
+        except Exception as e:
+            print(f"  [warn] {url} failed: {e} — trying next endpoint…")
+
+    print("  [error] All Overpass endpoints failed.")
+    return None
 
 
 def overpass_error_message(response: requests.Response) -> Optional[str]:
