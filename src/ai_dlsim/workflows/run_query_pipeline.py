@@ -11,9 +11,11 @@ from __future__ import annotations
 
 import argparse
 import csv
+import statistics
 import shutil
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 SRC_DIR = Path(__file__).resolve().parents[2]
@@ -34,6 +36,66 @@ DATA_DIR = REPO_ROOT / "data" / "Ithaca"
 EXPECTED_OUTPUTS = ["link_performance.csv", "agent.csv", "solution.csv"]
 
 
+def normalize_link_lengths_for_dlsim(run_dir: Path) -> dict:
+    """
+    Normalize link.csv length units for DLSim runtime.
+
+    Heuristic: if median(link.length) > 5, treat lengths as meters and
+    convert to kilometers for the run copy only.
+    """
+    link_csv = run_dir / "link.csv"
+    if not link_csv.exists():
+        return {"status": "skipped", "reason": "link.csv missing"}
+
+    with open(link_csv, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+        fieldnames = f.readline().strip().split(",") if not rows else list(rows[0].keys())
+
+    if not rows:
+        return {"status": "skipped", "reason": "link.csv empty"}
+
+    lengths = []
+    for row in rows:
+        raw = (row.get("length") or "").strip()
+        try:
+            lengths.append(float(raw))
+        except ValueError:
+            continue
+
+    if not lengths:
+        return {"status": "skipped", "reason": "no numeric length values"}
+
+    median_length = statistics.median(lengths)
+    if median_length <= 5:
+        return {
+            "status": "unchanged",
+            "assumed_unit": "km_or_miles",
+            "median_length": median_length,
+        }
+
+    converted = 0
+    for row in rows:
+        raw = (row.get("length") or "").strip()
+        try:
+            km = float(raw) / 1000.0
+            row["length"] = f"{km:.6f}"
+            converted += 1
+        except ValueError:
+            continue
+
+    with open(link_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return {
+        "status": "converted",
+        "assumed_unit": "meters",
+        "median_length": median_length,
+        "rows_converted": converted,
+    }
+
+
 def run_dlsim(run_dir: Path) -> dict:
     """Copy network files, run DLSim, return result metadata."""
     if not DLSIM_PY.exists():
@@ -43,6 +105,20 @@ def run_dlsim(run_dir: Path) -> dict:
 
     for f in ["node.csv", "link.csv"]:
         shutil.copy(DATA_DIR / f, run_dir / f)
+
+    normalization = normalize_link_lengths_for_dlsim(run_dir)
+    if normalization["status"] == "converted":
+        print(
+            "[sim] Normalized link lengths for runtime copy: "
+            f"assumed meters (median={normalization['median_length']:.3f})"
+        )
+    elif normalization["status"] == "unchanged":
+        print(
+            "[sim] Kept link lengths unchanged: "
+            f"median={normalization['median_length']:.3f}"
+        )
+    else:
+        print(f"[sim] Link length normalization skipped: {normalization.get('reason', 'unknown')}")
 
     print(f"\n[sim] Running DLSim from {run_dir} ...")
     result = subprocess.run(
@@ -80,6 +156,22 @@ def parse_agent_results(run_dir: Path) -> dict:
         tt = float(travel_time) if travel_time else None
     except ValueError:
         tt = None
+
+    # DLSim python output can report negative travel_time even when
+    # time_sequence is valid. Use timestamps as a fallback in that case.
+    if (tt is None or tt <= 0) and time_seq:
+        times = [t.strip() for t in time_seq.split(";") if t.strip()]
+        if len(times) >= 2 and all("-" not in t for t in times):
+            try:
+                t0 = datetime.strptime(times[0], "%H%M:%S")
+                t1 = datetime.strptime(times[-1], "%H%M:%S")
+                fallback_minutes = (t1 - t0).total_seconds() / 60.0
+                if fallback_minutes < 0:
+                    fallback_minutes += 24 * 60
+                if fallback_minutes > 0:
+                    tt = fallback_minutes
+            except ValueError:
+                pass
 
     return {
         "travel_time_minutes": tt,
