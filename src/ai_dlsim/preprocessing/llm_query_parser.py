@@ -95,7 +95,6 @@ class LlmQueryParser:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.0,
         )
 
         raw_text = resp.choices[0].message.content or ""
