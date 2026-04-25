@@ -311,13 +311,13 @@ def build_multiresolution_nets(osm_path: pathlib.Path, out_dir: pathlib.Path) ->
         og.buildMultiResolutionNets(net)
         og.outputNetToCSV(net, output_folder=str(out_dir))
 
-        # Copy macro files into macronet/ to match meso/micro layout
-        macro_dir = out_dir / "macronet"
-        macro_dir.mkdir(exist_ok=True)
-        for fname in ("node.csv", "link.csv", "movement.csv", "poi.csv"):
-            src = out_dir / fname
-            if src.exists():
-                shutil.copy2(src, macro_dir / fname)
+        # Copy root-level files into each net subfolder
+        for net_dir in (out_dir / "macronet", out_dir / "mesonet", out_dir / "micronet"):
+            if net_dir.exists():
+                for fname in ("node.csv", "link.csv", "movement.csv", "poi.csv"):
+                    src = out_dir / fname
+                    if src.exists() and not (net_dir / fname).exists():
+                        shutil.copy2(src, net_dir / fname)
 
         print(f"   [ok] macronet → {out_dir}/macronet/")
         print(f"   [ok] mesonet  → {out_dir}/mesonet/")
