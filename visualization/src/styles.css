@@ -1,0 +1,99 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #1f2937;
+  background-color: #f5f7fb;
+}
+
+body {
+  margin: 0;
+}
+
+.app-shell {
+  padding: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.stat-value {
+  margin-top: 4px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+
+.grid-layout.single-column {
+  grid-template-columns: 1fr;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 240px;
+}
+
+.map-panel {
+  min-height: 620px;
+}
+
+.answer-panel {
+  margin-bottom: 12px;
+}
+
+.answer-text {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+
+.error-banner {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  color: #991b1b;
+  background: #fef2f2;
+}
+
+.loading {
+  margin-bottom: 10px;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+

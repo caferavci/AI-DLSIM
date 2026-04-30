@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import statistics
 import shutil
 import subprocess
@@ -263,6 +264,25 @@ def main() -> None:
     print("\n[step 6] Generating final answer with LLM ...")
     post = LlmResultInterpreter(model=args.llm_model)
     final_answer = post.interpret(user_query=args.query, dlsim_result=summary)
+
+    # Persist latest text/structured results for dashboard consumption.
+    (run_dir / "final_answer.txt").write_text(final_answer, encoding="utf-8")
+    (run_dir / "dashboard_summary.json").write_text(
+        json.dumps(
+            {
+                "query": args.query,
+                "final_answer": final_answer,
+                "travel_time_minutes": agent_result.get("travel_time_minutes"),
+                "completed": agent_result.get("completed"),
+                "origin": summary["origin"],
+                "destination": summary["destination"],
+                "departure_time": summary["departure_time"],
+                "updated_at": datetime.now().isoformat(timespec="seconds"),
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
 
     print("\n" + "=" * 60)
     print("FINAL ANSWER")

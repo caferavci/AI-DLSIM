@@ -9,3 +9,8 @@ __pycache__/
 # Virtual Environment
 .venv/
 .env
+
+# Visualization frontend
+visualization/node_modules/
+visualization/dist/
+.env
