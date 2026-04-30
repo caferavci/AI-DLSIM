@@ -9,12 +9,18 @@ Full preprocessing pipeline: natural language query → DLSim-MRM input package.
     Step 3   generate_settings — write settings.csv, assemble final package
 
 Usage:
-    python preprocess.py
+    python preprocess.py                          # interactive, uses macronet
+    python preprocess.py "zip code 14850"         # non-interactive, macronet
+    python preprocess.py "zip code 14850" --net mesonet
+    python preprocess.py "zip code 14850" --net micronet
 """
 
 import sys
+import argparse
 import pathlib
 from typing import Optional, Tuple
+
+VALID_NETS = ("macronet", "mesonet", "micronet")
 
 _here = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(_here.parent))           # preprocessing siblings
@@ -59,11 +65,23 @@ def _departure_time_to_period(departure_time: Optional[str]) -> Tuple[str, str]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="DLSim-MRM Preprocessing Pipeline")
+    parser.add_argument("query", nargs="?", default=None,
+                        help="Simulation scenario query or ZIP code (interactive if omitted)")
+    parser.add_argument("--net", choices=VALID_NETS, default="macronet",
+                        help="Network resolution to use for demand generation (default: macronet)")
+    args = parser.parse_args()
+    net = args.net
+
     print("=" * 60)
     print("  DLSim-MRM Preprocessing Pipeline")
     print("=" * 60)
+    print(f"  Network: {net}")
 
-    user_query = input("\nDescribe your simulation scenario: ").strip()
+    if args.query:
+        user_query = args.query
+    else:
+        user_query = input("\nDescribe your simulation scenario: ").strip()
     if not user_query:
         print("No input provided. Exiting.")
         sys.exit(0)
@@ -136,16 +154,16 @@ def main() -> None:
     _rc.build_multiresolution_nets(osm_path, data_dir)
 
     print("\n" + "─" * 60)
-    print("  Step 2/3 — Generating demand via grid2demand")
+    print(f"  Step 2/3 — Generating demand via grid2demand ({net})")
     print("─" * 60)
-    _g2d.run(str(data_dir / "macronet"))
+    _g2d.run(str(data_dir / net))
 
     print("\n" + "─" * 60)
     print("  Step 3/3 — Generating settings.csv")
     print("─" * 60)
-    _gs.run(str(data_dir / "macronet"), demand_period=demand_period, time_period=time_period)
+    _gs.run(str(data_dir / net), demand_period=demand_period, time_period=time_period)
 
-    demand_dir = data_dir.parent / f"{data_dir.name}_demand"
+    demand_dir = data_dir / f"{net}_demand"
     print("\n" + "=" * 60)
     print("  Pipeline complete.")
     print(f"  DLSim-MRM input package: {demand_dir}/")

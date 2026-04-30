@@ -11,8 +11,11 @@ Usage:
 """
 
 import sys
+import csv
 import shutil
 import pathlib
+
+csv.field_size_limit(sys.maxsize)
 import grid2demand as gd
 import grid2demand.func_lib.gen_zone as _gen_zone
 
@@ -31,6 +34,30 @@ def _fixed_get_lng_lat_min_max(node_dict):
 
 _gen_zone.get_lng_lat_min_max = _fixed_get_lng_lat_min_max
 
+# Columns grid2demand requires in node.csv; mesonet/micronet lack some of them.
+_G2D_NODE_COLS = {"activity_type", "poi_id"}
+
+
+def _ensure_node_columns(node_csv: pathlib.Path) -> None:
+    """Add any missing grid2demand-required columns (empty) to node.csv in-place."""
+    with open(node_csv, newline="") as f:
+        reader = csv.DictReader(f)
+        existing = set(reader.fieldnames or [])
+        missing = _G2D_NODE_COLS - existing
+        if not missing:
+            return
+        rows = list(reader)
+
+    fieldnames = list(existing) + sorted(missing)
+    with open(node_csv, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
+        writer.writeheader()
+        for row in rows:
+            for col in missing:
+                row[col] = ""
+            writer.writerow(row)
+    print(f"[ok] Added missing columns to node.csv: {sorted(missing)}")
+
 
 def run(input_folder: str) -> None:
     input_dir = pathlib.Path(input_folder).resolve()
@@ -45,6 +72,7 @@ def run(input_folder: str) -> None:
     print(f"Input : {input_dir}")
     print(f"Output: {output_dir}\n")
 
+    _ensure_node_columns(input_dir / "node.csv")
     net = gd.GRID2DEMAND(input_dir=str(input_dir), output_dir=str(output_dir))
     network = net.load_network
     node_dict = network["node_dict"]
