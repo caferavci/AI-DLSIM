@@ -32,8 +32,14 @@ from ai_dlsim.preprocessing.input_agent_generator import generate_input_agent_cs
 from ai_dlsim.postprocessing.llm_result_interpreter import LlmResultInterpreter
 
 DLSIM_PY = REPO_ROOT / "external" / "DLSim" / "src" / "python" / "DLSim.py"
+DTALITE_BIN = REPO_ROOT / "DTALite"
 
 DATA_DIR = REPO_ROOT / "data" / "Ithaca"
+FALLBACK_DATA_DIRS = [
+    REPO_ROOT / "outputs" / "runs" / "query_pipeline",
+    REPO_ROOT / "outputs" / "runs" / "ithaca_dlsim",
+    REPO_ROOT / "data" / "14850",
+]
 EXPECTED_OUTPUTS = ["link_performance.csv", "agent.csv", "solution.csv"]
 
 
@@ -97,6 +103,18 @@ def normalize_link_lengths_for_dlsim(run_dir: Path) -> dict:
     }
 
 
+def resolve_network_source_dir() -> Path:
+    """Pick first directory that contains both node.csv and link.csv."""
+    candidates = [DATA_DIR, *FALLBACK_DATA_DIRS]
+    for directory in candidates:
+        if (directory / "node.csv").exists() and (directory / "link.csv").exists():
+            return directory
+    raise FileNotFoundError(
+        "Could not find node.csv/link.csv in expected sources: "
+        + ", ".join(str(d) for d in candidates)
+    )
+
+
 def run_dlsim(run_dir: Path) -> dict:
     """Copy network files, run DLSim, return result metadata."""
     if not DLSIM_PY.exists():
@@ -136,17 +154,122 @@ def run_dlsim(run_dir: Path) -> dict:
     return {"status": "success", "output_dir": str(run_dir), "produced": produced}
 
 
+def run_dlsim_route_engine(base_run_dir: Path) -> dict:
+    """Run DLSim route engine in an isolated folder."""
+    engine_dir = base_run_dir / "dlsim_engine"
+    engine_dir.mkdir(parents=True, exist_ok=True)
+
+    # Preserve input_agent generated in base_run_dir.
+    input_agent = base_run_dir / "input_agent.csv"
+    if not input_agent.exists():
+        return {"status": "failed", "error": f"Missing {input_agent}"}
+
+    source_dir = resolve_network_source_dir()
+    for f in ["node.csv", "link.csv"]:
+        shutil.copy(source_dir / f, engine_dir / f)
+    shutil.copy(input_agent, engine_dir / "input_agent.csv")
+
+    normalization = normalize_link_lengths_for_dlsim(engine_dir)
+    if normalization["status"] == "converted":
+        print(
+            "[route-engine] Normalized link lengths: "
+            f"assumed meters (median={normalization['median_length']:.3f})"
+        )
+
+    print(f"\n[route-engine] Running DLSim from {engine_dir} ...")
+    result = subprocess.run(
+        [sys.executable, str(DLSIM_PY)],
+        cwd=str(engine_dir),
+        capture_output=True,
+        text=True,
+    )
+
+    if result.returncode != 0:
+        return {
+            "status": "failed",
+            "error": result.stderr or result.stdout,
+            "output_dir": str(engine_dir),
+        }
+
+    produced = [f for f in EXPECTED_OUTPUTS if (engine_dir / f).exists()]
+    return {"status": "success", "output_dir": str(engine_dir), "produced": produced}
+
+
+def run_dtalite_traffic_engine(base_run_dir: Path) -> dict:
+    """Run DTALite traffic engine in an isolated folder."""
+    engine_dir = base_run_dir / "dtalite_engine"
+    engine_dir.mkdir(parents=True, exist_ok=True)
+
+    if not DTALITE_BIN.exists():
+        return {
+            "status": "failed",
+            "error": f"DTALite binary not found at {DTALITE_BIN}",
+            "output_dir": str(engine_dir),
+        }
+
+    input_agent = base_run_dir / "input_agent.csv"
+    if not input_agent.exists():
+        return {"status": "failed", "error": f"Missing {input_agent}", "output_dir": str(engine_dir)}
+
+    source_dir = resolve_network_source_dir()
+    for f in ["node.csv", "link.csv"]:
+        shutil.copy(source_dir / f, engine_dir / f)
+    shutil.copy(input_agent, engine_dir / "input_agent.csv")
+
+    normalization = normalize_link_lengths_for_dlsim(engine_dir)
+    if normalization["status"] == "converted":
+        print(
+            "[traffic-engine] Normalized link lengths: "
+            f"assumed meters (median={normalization['median_length']:.3f})"
+        )
+
+    print(f"\n[traffic-engine] Running DTALite from {engine_dir} ...")
+    try:
+        result = subprocess.run(
+            [str(DTALITE_BIN)],
+            cwd=str(engine_dir),
+            capture_output=True,
+            text=True,
+        )
+    except OSError as e:
+        return {
+            "status": "failed",
+            "error": f"DTALite execution failed: {e}",
+            "output_dir": str(engine_dir),
+        }
+
+    if result.returncode != 0:
+        return {
+            "status": "failed",
+            "error": result.stderr or result.stdout,
+            "output_dir": str(engine_dir),
+        }
+
+    produced = [f for f in EXPECTED_OUTPUTS if (engine_dir / f).exists()]
+    return {"status": "success", "output_dir": str(engine_dir), "produced": produced}
+
+
 def parse_agent_results(run_dir: Path) -> dict:
     """Read agent.csv and extract travel time + route for the query agent."""
     agent_csv = run_dir / "agent.csv"
     if not agent_csv.exists():
-        return {"travel_time_minutes": None, "route_nodes": None, "completed": False}
+        return {
+            "travel_time_minutes": None,
+            "route_nodes": None,
+            "completed": False,
+            "status": "missing_agent_csv",
+        }
 
     with open(agent_csv, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
 
     if not rows:
-        return {"travel_time_minutes": None, "route_nodes": None, "completed": False}
+        return {
+            "travel_time_minutes": None,
+            "route_nodes": None,
+            "completed": False,
+            "status": "no_agent_rows",
+        }
 
     agent = rows[0]
     travel_time = agent.get("travel_time", "")
@@ -179,6 +302,7 @@ def parse_agent_results(run_dir: Path) -> dict:
         "route_nodes": node_seq or None,
         "time_sequence": time_seq or None,
         "completed": tt is not None and tt > 0,
+        "status": "ok" if tt is not None and tt > 0 else "invalid_or_incomplete",
     }
 
 
@@ -192,6 +316,47 @@ def parse_solution(run_dir: Path) -> dict:
     if not rows:
         return {}
     return dict(rows[0])
+
+
+def _route_pairs(node_sequence: str | None) -> list[tuple[str, str]]:
+    nodes = [n for n in (node_sequence or "").split(";") if n]
+    return list(zip(nodes, nodes[1:]))
+
+
+def parse_dtalite_route_traffic(run_dir: Path, route_nodes: str | None) -> dict:
+    """Extract DTALite link-level traffic values along DLSim route."""
+    lp_csv = run_dir / "link_performance.csv"
+    if not lp_csv.exists():
+        return {"status": "missing_output", "route_link_metrics": []}
+
+    route_edges = set(_route_pairs(route_nodes))
+    if not route_edges:
+        return {"status": "no_route_edges", "route_link_metrics": []}
+
+    route_metrics: list[dict] = []
+    with open(lp_csv, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            from_id = (row.get("from_node_id") or "").strip()
+            to_id = (row.get("to_node_id") or "").strip()
+            if (from_id, to_id) not in route_edges:
+                continue
+            route_metrics.append(
+                {
+                    "from_node_id": from_id,
+                    "to_node_id": to_id,
+                    "time_period": row.get("time_period"),
+                    "speed": row.get("speed"),
+                    "volume": row.get("volume"),
+                    "travel_time": row.get("travel_time"),
+                    "queue": row.get("queue"),
+                }
+            )
+
+    return {
+        "status": "success",
+        "route_link_metrics": route_metrics,
+        "count": len(route_metrics),
+    }
 
 
 def main() -> None:
@@ -219,7 +384,9 @@ def main() -> None:
 
     # ── Step 2: Resolve place names → node IDs
     print("\n[step 2] Resolving locations to network nodes ...")
-    node_csv = DATA_DIR / "node.csv"
+    source_dir = resolve_network_source_dir()
+    print(f"  network source: {source_dir}")
+    node_csv = source_dir / "node.csv"
     origin_loc, dest_loc = resolve_pair(request.origin, request.destination, node_csv)
     print(f"  origin:      '{origin_loc.place_name}' → node {origin_loc.node_id} ({origin_loc.distance_km} km away)")
     print(f"  destination: '{dest_loc.place_name}' → node {dest_loc.node_id} ({dest_loc.distance_km} km away)")
@@ -235,35 +402,74 @@ def main() -> None:
     )
     print(f"\n[step 3] Generated {agent_csv_path}")
 
-    # ── Step 4: Run DLSim
-    print("\n[step 4] Running DLSim simulation ...")
-    sim_result = run_dlsim(run_dir)
-
-    if sim_result["status"] != "success":
-        print(f"\n[error] Simulation failed: {sim_result.get('error', 'unknown')}")
+    # ── Step 4a: Route engine (DLSim)
+    print("\n[step 4a] Running route engine (DLSim) ...")
+    route_engine_result = run_dlsim_route_engine(run_dir)
+    if route_engine_result["status"] != "success":
+        print(f"\n[error] Route engine failed: {route_engine_result.get('error', 'unknown')}")
         sys.exit(1)
 
-    # ── Step 5: Parse outputs
-    print("\n[step 5] Parsing simulation outputs ...")
-    agent_result = parse_agent_results(run_dir)
-    solution = parse_solution(run_dir)
+    dlsim_dir = Path(route_engine_result["output_dir"])
+    # Copy route-engine outputs to top-level query_pipeline for compatibility
+    for f in ["agent.csv", "link_performance.csv", "solution.csv", "node.csv", "link.csv"]:
+        src = dlsim_dir / f
+        if src.exists():
+            shutil.copy(src, run_dir / f)
+
+    # ── Step 4b: Traffic engine (DTALite)
+    print("\n[step 4b] Running traffic engine (DTALite) ...")
+    traffic_engine_result = run_dtalite_traffic_engine(run_dir)
+    if traffic_engine_result["status"] != "success":
+        print(f"  [warn] Traffic engine failed: {traffic_engine_result.get('error', 'unknown')}")
+
+    # ── Step 5: Parse route engine outputs
+    print("\n[step 5] Parsing route engine outputs ...")
+    agent_result = parse_agent_results(dlsim_dir)
+    solution = parse_solution(dlsim_dir)
     print(f"  travel_time: {agent_result.get('travel_time_minutes')} min")
     print(f"  route:       {agent_result.get('route_nodes')}")
     print(f"  completed:   {agent_result.get('completed')}")
+
+    # ── Step 5b: Parse traffic engine outputs (on selected route)
+    print("\n[step 5b] Parsing traffic engine outputs ...")
+    traffic_result = {"status": "not_run", "route_link_metrics": []}
+    if traffic_engine_result["status"] == "success":
+        dtalite_dir = Path(traffic_engine_result["output_dir"])
+        traffic_result = parse_dtalite_route_traffic(dtalite_dir, agent_result.get("route_nodes"))
+        print(f"  route link metrics found: {traffic_result.get('count', 0)}")
+    else:
+        print("  route link metrics found: 0 (traffic engine unavailable)")
 
     summary = {
         "query": args.query,
         "origin": {"name": origin_loc.place_name, "node_id": origin_loc.node_id},
         "destination": {"name": dest_loc.place_name, "node_id": dest_loc.node_id},
         "departure_time": request.departure_time,
+        "engines": {
+            "dlsim_route_engine": route_engine_result,
+            "dtalite_traffic_engine": traffic_engine_result,
+        },
+        "traffic_on_route": traffic_result,
         **agent_result,
         "solution": solution,
     }
 
     # ── Step 6: Post-processing agent (results → human answer)
     print("\n[step 6] Generating final answer with LLM ...")
-    post = LlmResultInterpreter(model=args.llm_model)
-    final_answer = post.interpret(user_query=args.query, dlsim_result=summary)
+    if not agent_result.get("completed"):
+        dlsim_issue = agent_result.get("status", "unknown")
+        dtalite_issue = traffic_engine_result.get("error", "not available")
+        final_answer = (
+            "Travel time: N/A\n"
+            f"Route available: {'No' if dlsim_issue in {'no_agent_rows', 'missing_agent_csv'} else 'Unknown'}\n"
+            f"DLSim: {'No feasible agent output' if dlsim_issue in {'no_agent_rows', 'missing_agent_csv'} else dlsim_issue}\n"
+            f"DTALite: {'Binary incompatible' if 'Bad CPU type' in dtalite_issue else 'Unavailable'}\n"
+            "\n"
+            "Try a nearby landmark pair or a known-good OD (e.g., Cornell University ↔ Ithaca Commons)."
+        )
+    else:
+        post = LlmResultInterpreter(model=args.llm_model)
+        final_answer = post.interpret(user_query=args.query, dlsim_result=summary)
 
     # Persist latest text/structured results for dashboard consumption.
     (run_dir / "final_answer.txt").write_text(final_answer, encoding="utf-8")
@@ -278,6 +484,10 @@ def main() -> None:
                 "destination": summary["destination"],
                 "departure_time": summary["departure_time"],
                 "updated_at": datetime.now().isoformat(timespec="seconds"),
+                "engine_outputs": {
+                    "dlsim_route_dir": str(Path(route_engine_result["output_dir"])),
+                    "dtalite_traffic_dir": str(Path(traffic_engine_result.get("output_dir", ""))),
+                },
             },
             indent=2,
         ),

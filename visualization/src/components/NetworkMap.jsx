@@ -16,9 +16,10 @@ export default function NetworkMap({ links, routePoints, mapKey }) {
     return first.geometry[0];
   }, [links]);
 
+  const hasRoute = (routePoints || []).length > 1;
+
   return (
-    <div className="panel map-panel">
-      <h3>Network Map</h3>
+    <div className="map-panel">
       <MapContainer
         key={mapKey}
         center={center}
@@ -46,6 +47,7 @@ export default function NetworkMap({ links, routePoints, mapKey }) {
           />
         ) : null}
       </MapContainer>
+      {!hasRoute ? <div className="map-note">No route output available for this engine.</div> : null}
     </div>
   );
 }
