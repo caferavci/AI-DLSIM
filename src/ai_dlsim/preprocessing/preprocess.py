@@ -9,13 +9,15 @@ Full preprocessing pipeline: natural language query → DLSim-MRM input package.
     Step 3   generate_settings — write settings.csv, assemble final package
 
 Usage:
-    python preprocess.py                          # interactive, uses macronet
-    python preprocess.py "zip code 14850"         # non-interactive, macronet
+    python preprocess.py                              # interactive, macronet
+    python preprocess.py "zip code 14850"             # non-interactive, macronet
     python preprocess.py "zip code 14850" --net mesonet
-    python preprocess.py "zip code 14850" --net micronet
+    python preprocess.py 14850 --skip-osm             # reuse existing .osm, macronet
+    python preprocess.py 14850 --skip-osm --net micronet
 """
 
 import sys
+import shutil
 import argparse
 import pathlib
 from typing import Optional, Tuple
@@ -67,9 +69,11 @@ def _departure_time_to_period(departure_time: Optional[str]) -> Tuple[str, str]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="DLSim-MRM Preprocessing Pipeline")
     parser.add_argument("query", nargs="?", default=None,
-                        help="Simulation scenario query or ZIP code (interactive if omitted)")
+                        help="Simulation scenario query, ZIP code, or folder name (interactive if omitted)")
     parser.add_argument("--net", choices=VALID_NETS, default="macronet",
                         help="Network resolution to use for demand generation (default: macronet)")
+    parser.add_argument("--skip-osm", action="store_true",
+                        help="Skip OSM fetch — reuse existing .osm file in data/<folder>/")
     args = parser.parse_args()
     net = args.net
 
@@ -86,72 +90,108 @@ def main() -> None:
         print("No input provided. Exiting.")
         sys.exit(0)
 
-    # If the input is (or contains) a bare ZIP code, use it directly so the
-    # ZCTA polygon path in resolve_location fires correctly.
-    zip_match = next((w for w in user_query.split() if w.isdigit() and len(w) == 5), None)
-    if zip_match:
-        print(f"\nZIP code detected ({zip_match}), skipping LLM parse.")
-        region = zip_match
-        departure_time = None
-    else:
-        print("\nParsing query…")
-        request = LlmQueryParser().parse(user_query)
-        print(f"   region          : {request.region}")
-        print(f"   departure_time  : {request.departure_time}")
-        print(f"   mode            : {request.mode}")
-        print(f"   scenario        : {request.scenario}")
-        region = request.region
-        departure_time = request.departure_time
-
-    demand_period, time_period = _departure_time_to_period(departure_time)
-    print(f"   → demand period : {demand_period} ({time_period})")
-
     repo_root = _here.parents[3]
-    data_dir = repo_root / "data" / _safe_name(region)
 
-    print("\n" + "─" * 60)
-    print("  Step 1/3 — Fetching OSM data and generating CSVs")
-    print("─" * 60)
+    # ── Skip-OSM path ────────────────────────────────────────────────────────
+    if args.skip_osm:
+        folder_name = user_query.strip()
+        data_dir = repo_root / "data" / folder_name
+        if not data_dir.is_dir():
+            print(f"[error] Directory not found: {data_dir}")
+            sys.exit(1)
 
-    if not _rc.OPENAI_API_KEY:
-        print("Set the OPENAI_API_KEY environment variable first.")
-        sys.exit(1)
+        osm_files = list(data_dir.glob("*.osm"))
+        if not osm_files:
+            print(f"[error] No .osm file found in {data_dir}")
+            sys.exit(1)
+        osm_path = osm_files[0]
+        print(f"\n[ok] Reusing existing OSM file: {osm_path.name}")
 
-    from openai import OpenAI
-    client = OpenAI(api_key=_rc.OPENAI_API_KEY)
+        # Remove generated folders so osm2gmns rebuilds cleanly
+        for folder in ("macronet", "mesonet", "micronet"):
+            d = data_dir / folder
+            if d.exists():
+                shutil.rmtree(d)
+                print(f"   Removed {folder}/")
+        # Remove stale root-level CSVs
+        for fname in ("node.csv", "link.csv", "movement.csv", "poi.csv"):
+            f = data_dir / fname
+            if f.exists():
+                f.unlink()
 
-    location = _rc.resolve_location(region)
+        demand_period, time_period = "AM", "0700_0800"
+        print(f"   → demand period : {demand_period} ({time_period})")
 
-    last_error = None
-    response = None
-    for attempt in range(1, _rc.MAX_QUERY_RETRIES + 1):
-        print(f"\nAsking {_rc.OPENAI_MODEL} to {'generate' if attempt == 1 else 'fix'} "
-              f"the Overpass query (attempt {attempt}/{_rc.MAX_QUERY_RETRIES})…")
-        query = _rc.ask_llm_for_query(client, location, previous_error=last_error)
-        print("\n── Generated query ──────────────────────────────────────")
-        print(query)
-        print("─────────────────────────────────────────────────────────")
-        response = _rc.run_overpass_query(query)
-        if response is None:
-            last_error = "Network error — could not reach Overpass API."
-            continue
-        error = _rc.overpass_error_message(response)
-        if error is None:
-            print("[ok] Query succeeded!")
-            break
-        print(f"[warn] Query error: {error}")
-        last_error = error
+        print("\n" + "─" * 60)
+        print("  Step 1/3 — Rebuilding networks from existing OSM")
+        print("─" * 60)
+        _rc.build_multiresolution_nets(osm_path, data_dir)
+
+    # ── Full pipeline path ───────────────────────────────────────────────────
     else:
-        print("\nAll Overpass attempts failed. Last error:", last_error)
-        sys.exit(1)
+        zip_match = next((w for w in user_query.split() if w.isdigit() and len(w) == 5), None)
+        if zip_match:
+            print(f"\nZIP code detected ({zip_match}), skipping LLM parse.")
+            region = zip_match
+            departure_time = None
+        else:
+            print("\nParsing query…")
+            request = LlmQueryParser().parse(user_query)
+            print(f"   region          : {request.region}")
+            print(f"   departure_time  : {request.departure_time}")
+            print(f"   mode            : {request.mode}")
+            print(f"   scenario        : {request.scenario}")
+            region = request.region
+            departure_time = request.departure_time
 
-    data_dir.mkdir(parents=True, exist_ok=True)
-    osm_path = data_dir / f"{_safe_name(region)}_roads.osm"
-    with open(osm_path, "wb") as f:
-        f.write(response.content)
-    print(f"Saved {len(response.content) / 1_048_576:.2f} MB → {osm_path}")
+        demand_period, time_period = _departure_time_to_period(departure_time)
+        print(f"   → demand period : {demand_period} ({time_period})")
 
-    _rc.build_multiresolution_nets(osm_path, data_dir)
+        data_dir = repo_root / "data" / _safe_name(region)
+
+        print("\n" + "─" * 60)
+        print("  Step 1/3 — Fetching OSM data and generating CSVs")
+        print("─" * 60)
+
+        if not _rc.OPENAI_API_KEY:
+            print("Set the OPENAI_API_KEY environment variable first.")
+            sys.exit(1)
+
+        from openai import OpenAI
+        client = OpenAI(api_key=_rc.OPENAI_API_KEY)
+
+        location = _rc.resolve_location(region)
+
+        last_error = None
+        response = None
+        for attempt in range(1, _rc.MAX_QUERY_RETRIES + 1):
+            print(f"\nAsking {_rc.OPENAI_MODEL} to {'generate' if attempt == 1 else 'fix'} "
+                  f"the Overpass query (attempt {attempt}/{_rc.MAX_QUERY_RETRIES})…")
+            query = _rc.ask_llm_for_query(client, location, previous_error=last_error)
+            print("\n── Generated query ──────────────────────────────────────")
+            print(query)
+            print("─────────────────────────────────────────────────────────")
+            response = _rc.run_overpass_query(query)
+            if response is None:
+                last_error = "Network error — could not reach Overpass API."
+                continue
+            error = _rc.overpass_error_message(response)
+            if error is None:
+                print("[ok] Query succeeded!")
+                break
+            print(f"[warn] Query error: {error}")
+            last_error = error
+        else:
+            print("\nAll Overpass attempts failed. Last error:", last_error)
+            sys.exit(1)
+
+        data_dir.mkdir(parents=True, exist_ok=True)
+        osm_path = data_dir / f"{_safe_name(region)}_roads.osm"
+        with open(osm_path, "wb") as f:
+            f.write(response.content)
+        print(f"Saved {len(response.content) / 1_048_576:.2f} MB → {osm_path}")
+
+        _rc.build_multiresolution_nets(osm_path, data_dir)
 
     print("\n" + "─" * 60)
     print(f"  Step 2/3 — Generating demand via grid2demand ({net})")

@@ -72,7 +72,7 @@ def write_settings_csv(out_path, link_types, demand_period, time_period):
         "column_updating_iterations", "odme_iterations",
         "simulation_iterations", "number_of_memory_blocks",
     ])
-    rows.append(["", "dta", "20", "20", "400", "0", "4"])
+    rows.append(["", "dta", "20", "20", "400", "1", "4"])
     rows.append([])
 
     # [agent_type]
@@ -83,10 +83,10 @@ def write_settings_csv(out_path, link_types, demand_period, time_period):
     # [link_type]
     rows.append([
         "[link_type]", "link_type", "link_type_name", "",
-        "agent_type_blocklist", "type_code", "traffic_flow_code", "vdf_type",
+        "agent_type_blocklist", "type_code", "traffic_flow_code",
     ])
     for lt, name, type_code in link_types:
-        rows.append(["", str(lt), name, "", "", type_code, "1", "qvdf"])
+        rows.append(["", str(lt), name, "", "", type_code, "2"])
     rows.append([])
 
     # [demand_period]

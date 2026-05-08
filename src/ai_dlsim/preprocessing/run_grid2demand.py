@@ -14,8 +14,16 @@ import sys
 import csv
 import shutil
 import pathlib
+import warnings
+import logging
 
 csv.field_size_limit(sys.maxsize)
+
+# Suppress urllib3 LibreSSL warning that floods output from grid2demand worker processes
+warnings.filterwarnings("ignore", message=".*LibreSSL.*")
+warnings.filterwarnings("ignore", message=".*NotOpenSSLWarning.*")
+# Suppress grid2demand's verbose INFO logging
+logging.getLogger("grid2demand").setLevel(logging.WARNING)
 import grid2demand as gd
 import grid2demand.func_lib.gen_zone as _gen_zone
 
