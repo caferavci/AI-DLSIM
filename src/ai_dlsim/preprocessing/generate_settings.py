@@ -19,6 +19,8 @@ import csv
 import shutil
 import pathlib
 
+csv.field_size_limit(sys.maxsize)
+
 # Mapping: osm2gmns link_type integer -> (link_type_name, type_code)
 # type_code:  f = freeway,  a = arterial,  r = ramp,  c = centroid connector
 LINK_TYPE_CODES: dict[int, tuple[str, str]] = {
@@ -70,7 +72,7 @@ def write_settings_csv(out_path, link_types, demand_period, time_period):
         "column_updating_iterations", "odme_iterations",
         "simulation_iterations", "number_of_memory_blocks",
     ])
-    rows.append(["", "dta", "20", "20", "400", "0", "4"])
+    rows.append(["", "dta", "20", "20", "400", "1", "4"])
     rows.append([])
 
     # [agent_type]
@@ -81,10 +83,10 @@ def write_settings_csv(out_path, link_types, demand_period, time_period):
     # [link_type]
     rows.append([
         "[link_type]", "link_type", "link_type_name", "",
-        "agent_type_blocklist", "type_code", "traffic_flow_code", "vdf_type",
+        "agent_type_blocklist", "type_code", "traffic_flow_code",
     ])
     for lt, name, type_code in link_types:
-        rows.append(["", str(lt), name, "", "", type_code, "0", "qvdf"])
+        rows.append(["", str(lt), name, "", "", type_code, "2"])
     rows.append([])
 
     # [demand_period]

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <osm version="0.6" generator="Overpass API 0.7.62.11 87bfad18">
 <note>The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.</note>
-<meta osm_base="2026-04-23T20:16:15Z"/>
+<meta osm_base="2026-04-25T17:14:15Z"/>
 
   <node id="213409446" lat="42.4487870" lon="-76.5185740"/>
   <node id="213409451" lat="42.4488168" lon="-76.5185362">
@@ -2140,6 +2140,7 @@
   <node id="213439412" lat="42.4743190" lon="-76.4934660"/>
   <node id="213439415" lat="42.4743180" lon="-76.4935380"/>
   <node id="213439418" lat="42.4742371" lon="-76.4945816"/>
+  <node id="213439443" lat="42.5164260" lon="-76.4330990"/>
   <node id="213439579" lat="42.4191830" lon="-76.4809090"/>
   <node id="213439581" lat="42.4191690" lon="-76.4809750"/>
   <node id="213439582" lat="42.4192280" lon="-76.4809390"/>
@@ -2216,6 +2217,7 @@
   <node id="213440492" lat="42.4463940" lon="-76.4873851"/>
   <node id="213440494" lat="42.4464636" lon="-76.4874469">
     <tag k="crossing" v="marked"/>
+    <tag k="crossing:island" v="no"/>
     <tag k="crossing:markings" v="zebra"/>
     <tag k="highway" v="crossing"/>
   </node>
@@ -2955,6 +2957,20 @@
   <node id="213448159" lat="42.4720340" lon="-76.4304780"/>
   <node id="213448171" lat="42.4761150" lon="-76.4307460"/>
   <node id="213448181" lat="42.4865580" lon="-76.4313720"/>
+  <node id="213448183" lat="42.4918350" lon="-76.4316820"/>
+  <node id="213448186" lat="42.4973430" lon="-76.4320050"/>
+  <node id="213448189" lat="42.4977430" lon="-76.4320250"/>
+  <node id="213448191" lat="42.4979810" lon="-76.4320390"/>
+  <node id="213448194" lat="42.4980480" lon="-76.4320420"/>
+  <node id="213448196" lat="42.4982280" lon="-76.4320530"/>
+  <node id="213448198" lat="42.5016990" lon="-76.4322510"/>
+  <node id="213448201" lat="42.5024710" lon="-76.4322940"/>
+  <node id="213448204" lat="42.5028320" lon="-76.4323150"/>
+  <node id="213448207" lat="42.5065720" lon="-76.4325250"/>
+  <node id="213448210" lat="42.5098790" lon="-76.4327080"/>
+  <node id="213448214" lat="42.5116250" lon="-76.4328250"/>
+  <node id="213448217" lat="42.5116790" lon="-76.4328320"/>
+  <node id="213448219" lat="42.5133520" lon="-76.4329340"/>
   <node id="213448229" lat="42.4602581" lon="-76.4919433"/>
   <node id="213448232" lat="42.4603344" lon="-76.4917947"/>
   <node id="213448235" lat="42.4604645" lon="-76.4915320"/>
@@ -9065,7 +9081,13 @@
   <node id="213514457" lat="42.4369113" lon="-76.4981780"/>
   <node id="213514864" lat="42.4448417" lon="-76.4889394"/>
   <node id="213514869" lat="42.4447830" lon="-76.4884790"/>
-  <node id="213514875" lat="42.4447390" lon="-76.4875094"/>
+  <node id="213514875" lat="42.4447390" lon="-76.4875094">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:markings" v="yes"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="yes"/>
+  </node>
   <node id="213514880" lat="42.4448614" lon="-76.4868632"/>
   <node id="213514890" lat="42.4449022" lon="-76.4866200"/>
   <node id="213514916" lat="42.4775940" lon="-76.4760080"/>
@@ -12456,20 +12478,6 @@
     <tag k="gnis:feature_id" v="946083"/>
     <tag k="name" v="Cayuga Heights School"/>
   </node>
-  <node id="357559160" lat="42.4509060" lon="-76.4954959">
-    <tag k="amenity" v="school"/>
-    <tag k="check_date" v="2026-04-11"/>
-    <tag k="ele" v="122"/>
-    <tag k="gnis:feature_id" v="949880"/>
-    <tag k="name" v="Fall Creek School"/>
-  </node>
-  <node id="357574438" lat="42.4734058" lon="-76.4679948">
-    <tag k="amenity" v="school"/>
-    <tag k="ele" v="301"/>
-    <tag k="gnis:feature_id" v="958962"/>
-    <tag k="name" v="Northeast Elementary School"/>
-    <tag k="operator" v="Ithaca City School District"/>
-  </node>
   <node id="357633590" lat="42.4533333" lon="-76.5002778">
     <tag k="amenity" v="place_of_worship"/>
     <tag k="ele" v="119"/>
@@ -13283,32 +13291,6 @@
     <tag k="amenity" v="restaurant"/>
     <tag k="name" v="Adelita's Mexican Cocina and Tequila"/>
     <tag k="website" v="https://www.adelitascocina.com/"/>
-  </node>
-  <node id="829688184" lat="42.4767661" lon="-76.4637658">
-    <tag k="addr:city" v="Ithaca"/>
-    <tag k="addr:housenumber" v="555"/>
-    <tag k="addr:postcode" v="14850"/>
-    <tag k="addr:state" v="NY"/>
-    <tag k="addr:street" v="Warren Road"/>
-    <tag k="amenity" v="school"/>
-    <tag k="name" v="TST BOCES"/>
-    <tag k="phone" v="+1-607-257-1551"/>
-    <tag k="polling_station" v="yes"/>
-    <tag k="website" v="https://www.tstboces.org/"/>
-  </node>
-  <node id="829688188" lat="42.4754763" lon="-76.4680680">
-    <tag k="amenity" v="school"/>
-    <tag k="name" v="Dewitt Middle School"/>
-    <tag k="operator" v="Ithaca City School District"/>
-  </node>
-  <node id="829688219" lat="42.4767978" lon="-76.4662012">
-    <tag k="amenity" v="school"/>
-  </node>
-  <node id="829688222" lat="42.4759511" lon="-76.4658364">
-    <tag k="amenity" v="school"/>
-  </node>
-  <node id="829688225" lat="42.4756820" lon="-76.4644202">
-    <tag k="amenity" v="school"/>
   </node>
   <node id="829688235" lat="42.4791089" lon="-76.4819350"/>
   <node id="829688261" lat="42.4812425" lon="-76.4761682"/>
@@ -14900,6 +14882,7 @@
     <tag k="name" v="Cinemapolis"/>
     <tag k="phone" v="+1-607-277-6115"/>
     <tag k="url" v="http://www.cinemapolis.org/"/>
+    <tag k="wheelchair" v="yes"/>
     <tag k="wikidata" v="Q43039926"/>
   </node>
   <node id="1224776936" lat="42.4392832" lon="-76.5057613">
@@ -17971,7 +17954,7 @@
     <tag k="phone" v="+16073390832"/>
     <tag k="self_service" v="yes"/>
     <tag k="shop" v="laundry"/>
-    <tag k="website" v="http://www.laundryroomithaca.com/"/>
+    <tag k="website" v="https://www.laundryroomithaca.com/"/>
   </node>
   <node id="3793492257" lat="42.4794950" lon="-76.4778202">
     <tag k="addr:city" v="Ithaca"/>
@@ -18250,6 +18233,7 @@
     <tag k="crossing:island" v="no"/>
     <tag k="crossing:markings" v="zebra"/>
     <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
   </node>
   <node id="4063684637" lat="42.4460466" lon="-76.4868269"/>
   <node id="4063684679" lat="42.4479206" lon="-76.4876338"/>
@@ -24447,6 +24431,13 @@
   <node id="5271285224" lat="42.4910452" lon="-76.4809487"/>
   <node id="5271285225" lat="42.4913162" lon="-76.4804354"/>
   <node id="5271285226" lat="42.4912971" lon="-76.4809609"/>
+  <node id="5271285750" lat="42.5129458" lon="-76.4329092"/>
+  <node id="5271285752" lat="42.5139976" lon="-76.4329687"/>
+  <node id="5271285754" lat="42.5138691" lon="-76.4329618"/>
+  <node id="5271285756" lat="42.5140984" lon="-76.4329741"/>
+  <node id="5271285760" lat="42.5145493" lon="-76.4329983"/>
+  <node id="5271285859" lat="42.5115450" lon="-76.4328196"/>
+  <node id="5271285892" lat="42.5103676" lon="-76.4327407"/>
   <node id="5271374721" lat="42.4925909" lon="-76.4858810"/>
   <node id="5271374722" lat="42.4925143" lon="-76.4868667"/>
   <node id="5271374723" lat="42.4924540" lon="-76.4869472"/>
@@ -25635,8 +25626,16 @@
     <tag k="traffic_signals:sound" v="yes"/>
   </node>
   <node id="5285033222" lat="42.4413822" lon="-76.4942320"/>
-  <node id="5285033223" lat="42.4414338" lon="-76.4922036"/>
-  <node id="5285033224" lat="42.4415318" lon="-76.4886486"/>
+  <node id="5285033223" lat="42.4414338" lon="-76.4922036">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+  </node>
+  <node id="5285033224" lat="42.4415318" lon="-76.4886486">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+  </node>
   <node id="5285033254" lat="42.4408427" lon="-76.5113494"/>
   <node id="5285033255" lat="42.4408521" lon="-76.5108738"/>
   <node id="5285033261" lat="42.4408173" lon="-76.5129035">
@@ -25662,13 +25661,48 @@
     <tag k="tactile_paving" v="yes"/>
     <tag k="traffic_signals:sound" v="yes"/>
   </node>
-  <node id="5285033268" lat="42.4415279" lon="-76.4944026"/>
-  <node id="5285033269" lat="42.4415536" lon="-76.4935360"/>
-  <node id="5285033270" lat="42.4415685" lon="-76.4928390"/>
-  <node id="5285033271" lat="42.4415904" lon="-76.4920466"/>
+  <node id="5285033268" lat="42.4415279" lon="-76.4944026">
+    <tag k="crossing:markings" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
+  </node>
+  <node id="5285033269" lat="42.4415536" lon="-76.4935360">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:markings" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
+  </node>
+  <node id="5285033270" lat="42.4415685" lon="-76.4928390">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:markings" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
+  </node>
+  <node id="5285033271" lat="42.4415904" lon="-76.4920466">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:markings" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
+  </node>
   <node id="5285033272" lat="42.4415990" lon="-76.4917913"/>
-  <node id="5285033273" lat="42.4416064" lon="-76.4914418"/>
-  <node id="5285033274" lat="42.4416254" lon="-76.4907997"/>
+  <node id="5285033273" lat="42.4416064" lon="-76.4914418">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:markings" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
+  </node>
+  <node id="5285033274" lat="42.4416254" lon="-76.4907997">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:markings" v="no"/>
+    <tag k="crossing:signals" v="no"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="yes"/>
+  </node>
   <node id="5285033275" lat="42.4416531" lon="-76.4898200">
     <tag k="crossing" v="informal"/>
   </node>
@@ -27563,6 +27597,7 @@
   <node id="5834492252" lat="42.4100722" lon="-76.5145847"/>
   <node id="5834493345" lat="42.4027229" lon="-76.5108867"/>
   <node id="5834493379" lat="42.4096145" lon="-76.5123113">
+    <tag k="check_date" v="2026-04-24"/>
     <tag k="information" v="map"/>
     <tag k="tourism" v="information"/>
   </node>
@@ -33213,7 +33248,9 @@
   <node id="9168035998" lat="42.4398662" lon="-76.4951098"/>
   <node id="9168035999" lat="42.4397741" lon="-76.4951219"/>
   <node id="9168036000" lat="42.4396679" lon="-76.4951367">
+    <tag k="crossing:markings" v="no"/>
     <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
   </node>
   <node id="9168036001" lat="42.4395959" lon="-76.4951480"/>
   <node id="9168295833" lat="42.4427001" lon="-76.4956858">
@@ -35033,6 +35070,8 @@
     <tag k="tactile_paving" v="no"/>
   </node>
   <node id="10103261446" lat="42.4456869" lon="-76.4900569">
+    <tag k="crossing:island" v="no"/>
+    <tag k="crossing:signals" v="no"/>
     <tag k="highway" v="crossing"/>
   </node>
   <node id="10103261447" lat="42.4461857" lon="-76.4901419">
@@ -36595,6 +36634,7 @@
   <node id="10242421949" lat="42.4376683" lon="-76.4928715">
     <tag k="crossing" v="uncontrolled"/>
     <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
   </node>
   <node id="10242423038" lat="42.4367478" lon="-76.4923352">
     <tag k="crossing" v="uncontrolled"/>
@@ -38946,12 +38986,6 @@
   <node id="11071395158" lat="42.4374176" lon="-76.4879376"/>
   <node id="11071395159" lat="42.4373414" lon="-76.4880878"/>
   <node id="11071395168" lat="42.4373978" lon="-76.4879751"/>
-  <node id="11071822001" lat="42.4737387" lon="-76.4683702">
-    <tag k="leisure" v="playground"/>
-  </node>
-  <node id="11071822002" lat="42.4730663" lon="-76.4688759">
-    <tag k="leisure" v="playground"/>
-  </node>
   <node id="11071854646" lat="42.4719555" lon="-76.4665610"/>
   <node id="11071854647" lat="42.4720877" lon="-76.4665657"/>
   <node id="11071854648" lat="42.4721893" lon="-76.4665575"/>
@@ -39089,10 +39123,14 @@
   <node id="11115385926" lat="42.4420605" lon="-76.4940063"/>
   <node id="11115385927" lat="42.4414558" lon="-76.4939855"/>
   <node id="11115385928" lat="42.4415357" lon="-76.4939883">
+    <tag k="crossing:markings" v="no"/>
     <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
   </node>
   <node id="11115385929" lat="42.4415814" lon="-76.4923720">
+    <tag k="crossing:markings" v="no"/>
     <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
   </node>
   <node id="11115385930" lat="42.4418280" lon="-76.4969200"/>
   <node id="11115385931" lat="42.4418616" lon="-76.4957496"/>
@@ -39208,7 +39246,9 @@
   <node id="11115386022" lat="42.4385879" lon="-76.4960300"/>
   <node id="11115386023" lat="42.4387069" lon="-76.4960289"/>
   <node id="11115386024" lat="42.4386575" lon="-76.4960294">
+    <tag k="crossing:markings" v="no"/>
     <tag k="highway" v="crossing"/>
+    <tag k="tactile_paving" v="no"/>
   </node>
   <node id="11115386025" lat="42.4368552" lon="-76.4998908"/>
   <node id="11115386026" lat="42.4362149" lon="-76.4998597"/>
@@ -40232,6 +40272,7 @@
     <tag k="addr:housenumber" v="146"/>
     <tag k="addr:street" v="East State Street"/>
     <tag k="amenity" v="restaurant"/>
+    <tag k="diet:vegetarian" v="yes"/>
     <tag k="name" v="Komonz Grill"/>
   </node>
   <node id="11795886951" lat="42.4396978" lon="-76.4971724">
@@ -40243,6 +40284,57 @@
     <tag k="website" v="https://schooleysjewelers.com/"/>
   </node>
   <node id="11805053862" lat="42.4689855" lon="-76.5279282"/>
+  <node id="11991175613" lat="42.5163401" lon="-76.4330944">
+    <tag k="direction" v="forward"/>
+    <tag k="highway" v="stop"/>
+    <tag k="stop" v="minor"/>
+  </node>
+  <node id="11998084519" lat="42.5156948" lon="-76.4330598"/>
+  <node id="11998099465" lat="42.5026582" lon="-76.4323049"/>
+  <node id="11998099490" lat="42.5030487" lon="-76.4323272"/>
+  <node id="11998099496" lat="42.5037922" lon="-76.4323689"/>
+  <node id="11998099502" lat="42.5045468" lon="-76.4324113"/>
+  <node id="11998099505" lat="42.5050055" lon="-76.4324370"/>
+  <node id="11998099631" lat="42.5075359" lon="-76.4325783"/>
+  <node id="11998099637" lat="42.5082006" lon="-76.4326151"/>
+  <node id="11998099647" lat="42.5083695" lon="-76.4326245"/>
+  <node id="11998099649" lat="42.5088111" lon="-76.4326489"/>
+  <node id="11998099657" lat="42.5092258" lon="-76.4326719"/>
+  <node id="11998099665" lat="42.5120055" lon="-76.4328519"/>
+  <node id="11998099668" lat="42.5143332" lon="-76.4329867"/>
+  <node id="11998099671" lat="42.5149987" lon="-76.4330224"/>
+  <node id="11998114792" lat="42.5029000" lon="-76.4323188"/>
+  <node id="11998114801" lat="42.5031814" lon="-76.4323346"/>
+  <node id="11998114802" lat="42.5036507" lon="-76.4323610"/>
+  <node id="11998114811" lat="42.5047132" lon="-76.4324206"/>
+  <node id="11998114815" lat="42.5062240" lon="-76.4325055"/>
+  <node id="11998114835" lat="42.5074795" lon="-76.4325752"/>
+  <node id="11998114836" lat="42.5051404" lon="-76.4324446"/>
+  <node id="11998114867" lat="42.5103197" lon="-76.4327375"/>
+  <node id="11998114868" lat="42.5112915" lon="-76.4328026"/>
+  <node id="11998114882" lat="42.5125878" lon="-76.4328874"/>
+  <node id="11998114883" lat="42.5128659" lon="-76.4329043"/>
+  <node id="11998114889" lat="42.5144922" lon="-76.4329952"/>
+  <node id="11998114899" lat="42.5152783" lon="-76.4330374"/>
+  <node id="11998114900" lat="42.5155163" lon="-76.4330502"/>
+  <node id="11998114907" lat="42.5161074" lon="-76.4330819"/>
+  <node id="11998141594" lat="42.5027689" lon="-76.4323113"/>
+  <node id="11998141610" lat="42.5106838" lon="-76.4327619"/>
+  <node id="11998141623" lat="42.5105582" lon="-76.4327535"/>
+  <node id="11999984552" lat="42.5160431" lon="-76.4330785"/>
+  <node id="11999994676" lat="42.5113653" lon="-76.4328075"/>
+  <node id="11999994679" lat="42.5111712" lon="-76.4327945"/>
+  <node id="11999994709" lat="42.5094723" lon="-76.4326855"/>
+  <node id="11999994712" lat="42.5073274" lon="-76.4325668"/>
+  <node id="11999994726" lat="42.5050928" lon="-76.4324419"/>
+  <node id="11999994736" lat="42.5041562" lon="-76.4323894"/>
+  <node id="12000041742" lat="42.5099448" lon="-76.4327124"/>
+  <node id="12000041754" lat="42.5094273" lon="-76.4326830"/>
+  <node id="12000041777" lat="42.5090888" lon="-76.4326643"/>
+  <node id="12000041935" lat="42.5074353" lon="-76.4325728"/>
+  <node id="12000041941" lat="42.5069738" lon="-76.4325472"/>
+  <node id="12000041945" lat="42.5041135" lon="-76.4323870"/>
+  <node id="12000041946" lat="42.5022088" lon="-76.4322794"/>
   <node id="12000042049" lat="42.4393606" lon="-76.4951958">
     <tag k="addr:city" v="Ithaca"/>
     <tag k="addr:housenumber" v="301"/>
@@ -40270,8 +40362,20 @@
     <tag k="website" v="https://www.levkitchen.com/"/>
   </node>
   <node id="12000878304" lat="42.5014773" lon="-76.6053633"/>
+  <node id="12004913491" lat="42.4872880" lon="-76.4314149"/>
+  <node id="12004913513" lat="42.4950443" lon="-76.4318702"/>
+  <node id="12004913516" lat="42.4956609" lon="-76.4319064"/>
+  <node id="12004913517" lat="42.4963273" lon="-76.4319455"/>
+  <node id="12005064906" lat="42.5013374" lon="-76.4322304"/>
   <node id="12005084099" lat="42.4925016" lon="-76.4317211"/>
+  <node id="12008273072" lat="42.4915802" lon="-76.4316670"/>
+  <node id="12008273106" lat="42.4883314" lon="-76.4314762"/>
+  <node id="12008273120" lat="42.5007402" lon="-76.4321963"/>
+  <node id="12008518198" lat="42.4947504" lon="-76.4318530"/>
+  <node id="12008518200" lat="42.4944603" lon="-76.4318360"/>
+  <node id="12008518210" lat="42.4937158" lon="-76.4317923"/>
   <node id="12008518226" lat="42.4925102" lon="-76.4318643"/>
+  <node id="12008518227" lat="42.4922584" lon="-76.4317068"/>
   <node id="12008518889" lat="42.4887276" lon="-76.4314995"/>
   <node id="12008518890" lat="42.4887503" lon="-76.4318260"/>
   <node id="12008518891" lat="42.4888239" lon="-76.4318644"/>
@@ -40281,7 +40385,10 @@
   <node id="12008518895" lat="42.4883865" lon="-76.4319535"/>
   <node id="12008518896" lat="42.4881677" lon="-76.4314666"/>
   <node id="12008518897" lat="42.4882332" lon="-76.4323544"/>
+  <node id="12008518902" lat="42.4892891" lon="-76.4315324"/>
   <node id="12008518910" lat="42.4881945" lon="-76.4318307"/>
+  <node id="12008518932" lat="42.4877992" lon="-76.4314449"/>
+  <node id="12008518942" lat="42.4874171" lon="-76.4314225"/>
   <node id="12008518943" lat="42.4875022" lon="-76.4314275"/>
   <node id="12008518944" lat="42.4875223" lon="-76.4318516"/>
   <node id="12008518953" lat="42.4865402" lon="-76.4319041"/>
@@ -40295,8 +40402,13 @@
   <node id="12008518979" lat="42.4872024" lon="-76.4362420"/>
   <node id="12008518984" lat="42.4872223" lon="-76.4365792"/>
   <node id="12008518995" lat="42.4867025" lon="-76.4355625"/>
+  <node id="12008519142" lat="42.4952678" lon="-76.4318833"/>
+  <node id="12008519143" lat="42.4969396" lon="-76.4319814"/>
+  <node id="12008519168" lat="42.4951073" lon="-76.4318739"/>
   <node id="12008519180" lat="42.4876814" lon="-76.4374769"/>
   <node id="12008519181" lat="42.4923965" lon="-76.4472911"/>
+  <node id="12008519193" lat="42.4987061" lon="-76.4320803"/>
+  <node id="12008519195" lat="42.4996689" lon="-76.4321352"/>
   <node id="12008519224" lat="42.4945991" lon="-76.4512704"/>
   <node id="12008684084" lat="42.4465286" lon="-76.4821629">
     <tag k="addr:city" v="Ithaca"/>
@@ -41285,6 +41397,7 @@
   </node>
   <node id="12114309697" lat="42.4224955" lon="-76.4942655">
     <tag k="amenity" v="cafe"/>
+    <tag k="name" v="Campus Center Cafe"/>
   </node>
   <node id="12114309698" lat="42.4223087" lon="-76.4941682">
     <tag k="amenity" v="restaurant"/>
@@ -46232,6 +46345,16 @@
     <tag k="level" v="0"/>
     <tag k="opening_hours" v="Tu-Su 10:00-17:00"/>
   </node>
+  <node id="13759855328" lat="42.4096104" lon="-76.5123014">
+    <tag k="amenity" v="vending_machine"/>
+    <tag k="currency:USD" v="yes"/>
+    <tag k="payment:cash" v="yes"/>
+    <tag k="payment:credit_cards" v="yes"/>
+    <tag k="vending" v="parking_tickets"/>
+  </node>
+  <node id="13759888775" lat="42.4786303" lon="-76.4669037"/>
+  <node id="13759902564" lat="42.4719136" lon="-76.4687921"/>
+  <node id="13759902565" lat="42.4731826" lon="-76.4668841"/>
   <way id="20181025">
     <nd ref="213409446"/>
     <nd ref="213409451"/>
@@ -49461,6 +49584,7 @@
     <tag k="highway" v="service"/>
     <tag k="name" v="Spring Lane"/>
     <tag k="service" v="alley"/>
+    <tag k="surface" v="fine_gravel"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Spring"/>
@@ -49734,6 +49858,7 @@
     <nd ref="4063684616"/>
     <nd ref="213440534"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="West Avenue"/>
     <tag k="oneway" v="yes"/>
     <tag k="surface" v="asphalt"/>
@@ -50663,6 +50788,117 @@
     <tag k="tiger:zip_left" v="14850"/>
     <tag k="tiger:zip_right" v="14850"/>
   </way>
+  <way id="20186079">
+    <nd ref="213448181"/>
+    <nd ref="12004913491"/>
+    <nd ref="12008518942"/>
+    <nd ref="12008518943"/>
+    <nd ref="12008518932"/>
+    <nd ref="12008518896"/>
+    <nd ref="12008273106"/>
+    <nd ref="12008518894"/>
+    <nd ref="12008518889"/>
+    <nd ref="12008518893"/>
+    <nd ref="12008518902"/>
+    <nd ref="12008273072"/>
+    <nd ref="213448183"/>
+    <nd ref="12008518227"/>
+    <nd ref="12005084099"/>
+    <nd ref="12008518210"/>
+    <nd ref="12008518200"/>
+    <nd ref="12008518198"/>
+    <nd ref="12004913513"/>
+    <nd ref="12008519168"/>
+    <nd ref="12008519142"/>
+    <nd ref="12004913516"/>
+    <nd ref="12004913517"/>
+    <nd ref="12008519143"/>
+    <nd ref="213448186"/>
+    <nd ref="213448189"/>
+    <nd ref="213448191"/>
+    <nd ref="213448194"/>
+    <nd ref="213448196"/>
+    <nd ref="12008519193"/>
+    <nd ref="12008519195"/>
+    <nd ref="12008273120"/>
+    <nd ref="12005064906"/>
+    <nd ref="213448198"/>
+    <nd ref="12000041946"/>
+    <nd ref="213448201"/>
+    <nd ref="11998099465"/>
+    <nd ref="11998141594"/>
+    <nd ref="213448204"/>
+    <nd ref="11998114792"/>
+    <nd ref="11998099490"/>
+    <nd ref="11998114801"/>
+    <nd ref="11998114802"/>
+    <nd ref="11998099496"/>
+    <nd ref="12000041945"/>
+    <nd ref="11999994736"/>
+    <nd ref="11998099502"/>
+    <nd ref="11998114811"/>
+    <nd ref="11998099505"/>
+    <nd ref="11999994726"/>
+    <nd ref="11998114836"/>
+    <nd ref="11998114815"/>
+    <nd ref="213448207"/>
+    <nd ref="12000041941"/>
+    <nd ref="11999994712"/>
+    <nd ref="12000041935"/>
+    <nd ref="11998114835"/>
+    <nd ref="11998099631"/>
+    <nd ref="11998099637"/>
+    <nd ref="11998099647"/>
+    <nd ref="11998099649"/>
+    <nd ref="12000041777"/>
+    <nd ref="11998099657"/>
+    <nd ref="12000041754"/>
+    <nd ref="11999994709"/>
+    <nd ref="213448210"/>
+    <nd ref="12000041742"/>
+    <nd ref="11998114867"/>
+    <nd ref="5271285892"/>
+    <nd ref="11998141623"/>
+    <nd ref="11998141610"/>
+    <nd ref="11999994679"/>
+    <nd ref="11998114868"/>
+    <nd ref="11999994676"/>
+    <nd ref="5271285859"/>
+    <nd ref="213448214"/>
+    <nd ref="213448217"/>
+    <nd ref="11998099665"/>
+    <nd ref="11998114882"/>
+    <nd ref="11998114883"/>
+    <nd ref="5271285750"/>
+    <nd ref="213448219"/>
+    <nd ref="5271285754"/>
+    <nd ref="5271285752"/>
+    <nd ref="5271285756"/>
+    <nd ref="11998099668"/>
+    <nd ref="11998114889"/>
+    <nd ref="5271285760"/>
+    <nd ref="11998099671"/>
+    <nd ref="11998114899"/>
+    <nd ref="11998114900"/>
+    <nd ref="11998084519"/>
+    <nd ref="11999984552"/>
+    <nd ref="11998114907"/>
+    <nd ref="11991175613"/>
+    <nd ref="213439443"/>
+    <tag k="highway" v="tertiary"/>
+    <tag k="maxspeed" v="55 mph"/>
+    <tag k="name" v="Hanshaw Road"/>
+    <tag k="tiger:cfcc" v="A41"/>
+    <tag k="tiger:county" v="Tompkins, NY"/>
+    <tag k="tiger:name_base" v="Hanshaw"/>
+    <tag k="tiger:name_type" v="Rd"/>
+    <tag k="tiger:reviewed" v="no"/>
+    <tag k="tiger:zip_left" v="13068"/>
+    <tag k="tiger:zip_left_1" v="13068"/>
+    <tag k="tiger:zip_left_2" v="14850"/>
+    <tag k="tiger:zip_right" v="13068"/>
+    <tag k="tiger:zip_right_2" v="14850"/>
+  </way>
   <way id="20186092">
     <nd ref="213447726"/>
     <nd ref="213448314"/>
@@ -51035,7 +51271,9 @@
     <nd ref="213450399"/>
     <nd ref="213450402"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Forest Park Lane"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Forest Park"/>
@@ -51947,6 +52185,7 @@
   </way>
   <way id="20186632">
     <nd ref="213457012"/>
+    <nd ref="13759888775"/>
     <nd ref="4890502027"/>
     <tag k="highway" v="residential"/>
     <tag k="lanes:backward" v="2"/>
@@ -52132,6 +52371,7 @@
     <tag k="highway" v="tertiary"/>
     <tag k="lanes" v="2"/>
     <tag k="name" v="Hudson Street"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Hudson"/>
@@ -52382,6 +52622,7 @@
     <nd ref="5834492248"/>
     <tag k="highway" v="unclassified"/>
     <tag k="name" v="West King Road"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="King"/>
@@ -54072,6 +54313,7 @@
     <nd ref="10103261422"/>
     <nd ref="213473799"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Osmun Place"/>
     <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
@@ -54085,6 +54327,7 @@
     <nd ref="5285033274"/>
     <nd ref="213473792"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Osmun Place"/>
     <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
@@ -55222,6 +55465,7 @@
     <nd ref="3281285789"/>
     <tag k="highway" v="unclassified"/>
     <tag k="name" v="Grant Egbert Boulevard East"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Main Campus"/>
@@ -58071,7 +58315,9 @@
     <nd ref="5285033271"/>
     <nd ref="213438175"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Glen Place"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Glen"/>
@@ -58794,8 +59040,10 @@
     <nd ref="213507621"/>
     <nd ref="213507619"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Edgemoor Lane"/>
     <tag k="oneway" v="yes"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Edgemoor"/>
@@ -59278,7 +59526,9 @@
     <nd ref="5285033273"/>
     <nd ref="213510764"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Dewitt Place"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Dewitt"/>
@@ -61062,6 +61312,7 @@
     <tag k="highway" v="unclassified"/>
     <tag k="name" v="Textor Circle"/>
     <tag k="name_1" v="Main Campus Road"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="East"/>
@@ -63183,7 +63434,9 @@
     <nd ref="5300743713"/>
     <nd ref="213535543"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Fountain Place"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Fountain"/>
@@ -63822,7 +64075,9 @@
     <nd ref="5285033270"/>
     <nd ref="213540700"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Willets Place"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Willets"/>
@@ -63917,7 +64172,9 @@
     <nd ref="213540836"/>
     <nd ref="213473792"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Edgewood Place"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Edgewood"/>
@@ -65632,6 +65889,7 @@
     <nd ref="213554261"/>
     <nd ref="213518231"/>
     <nd ref="5219884092"/>
+    <nd ref="13759902564"/>
     <nd ref="213452938"/>
     <nd ref="213554265"/>
     <nd ref="829661088"/>
@@ -69484,6 +69742,7 @@
     <nd ref="829661075"/>
     <nd ref="829661076"/>
     <tag k="highway" v="service"/>
+    <tag k="service" v="parking_aisle"/>
   </way>
   <way id="69200088">
     <nd ref="213561794"/>
@@ -69933,6 +70192,7 @@
   </way>
   <way id="69201266">
     <nd ref="829688793"/>
+    <nd ref="13759902565"/>
     <nd ref="829688795"/>
     <tag k="highway" v="service"/>
   </way>
@@ -71012,6 +71272,7 @@
     <nd ref="9174338323"/>
     <nd ref="213458797"/>
     <tag k="highway" v="tertiary"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Hudson Street"/>
     <tag k="sidewalk:both" v="separate"/>
     <tag k="surface" v="asphalt"/>
@@ -72060,6 +72321,7 @@
     <tag k="highway" v="residential"/>
     <tag k="name" v="Textor Circle"/>
     <tag k="oneway" v="yes"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Farm"/>
@@ -72405,6 +72667,7 @@
     <nd ref="5285033275"/>
     <nd ref="213492589"/>
     <tag k="highway" v="tertiary"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Stewart Avenue"/>
     <tag k="sidewalk:both" v="separate"/>
     <tag k="surface" v="paving_stones"/>
@@ -72415,6 +72678,7 @@
     <nd ref="213507619"/>
     <nd ref="3221053606"/>
     <tag k="highway" v="tertiary"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Stewart Avenue"/>
     <tag k="sidewalk:both" v="separate"/>
     <tag k="surface" v="asphalt"/>
@@ -73615,6 +73879,7 @@
     <nd ref="10240865902"/>
     <nd ref="213514890"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="South Avenue"/>
     <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
@@ -73913,6 +74178,7 @@
     <tag k="addr:street" v="North Tioga Street"/>
     <tag k="amenity" v="post_office"/>
     <tag k="building" v="government"/>
+    <tag k="check_date" v="2026-04-23"/>
     <tag k="name" v="Downtown Post Office"/>
     <tag k="nysgissam:nysaddresspointid" v="TOMP001895"/>
     <tag k="operator" v="United States Postal Service"/>
@@ -75051,10 +75317,12 @@
     <nd ref="12064794313"/>
     <nd ref="12064794314"/>
     <nd ref="1221372503"/>
+    <tag k="access" v="yes"/>
     <tag k="addr:street" v="East Green Street"/>
     <tag k="amenity" v="parking"/>
     <tag k="building" v="parking"/>
     <tag k="building:levels" v="7"/>
+    <tag k="fee" v="yes"/>
     <tag k="layer" v="1"/>
     <tag k="name" v="Green Street Parking Garage"/>
     <tag k="parking" v="multi-storey"/>
@@ -82117,7 +82385,10 @@
     <nd ref="10234792207"/>
     <nd ref="10234792206"/>
     <nd ref="2020566681"/>
+    <tag k="access" v="yes"/>
     <tag k="amenity" v="parking"/>
+    <tag k="fee" v="yes"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="194329490">
     <nd ref="2048510942"/>
@@ -83229,7 +83500,7 @@
     <nd ref="2180601653"/>
     <nd ref="368060059"/>
     <tag k="addr:state" v="NY"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="university"/>
     <tag k="ele" v="270"/>
     <tag k="gnis:feature_id" v="2518782"/>
     <tag k="name" v="Roy H. Park School of Communications"/>
@@ -83257,7 +83528,7 @@
     <nd ref="2180601453"/>
     <nd ref="368060064"/>
     <tag k="addr:state" v="NY"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="university"/>
     <tag k="ele" v="280"/>
     <tag k="gnis:feature_id" v="2518783"/>
     <tag k="name" v="Phillips Hall"/>
@@ -83339,7 +83610,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Grant Egbert Boulevard"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="university"/>
     <tag k="ele" v="275"/>
     <tag k="gnis:feature_id" v="2518778"/>
     <tag k="name" v="Landon Hall"/>
@@ -83533,7 +83804,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Textor Circle"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="university"/>
     <tag k="ele" v="277"/>
     <tag k="gnis:feature_id" v="2518792"/>
     <tag k="name" v="Williams Hall"/>
@@ -83711,7 +83982,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Textor Circle"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="university"/>
     <tag k="ele" v="274"/>
     <tag k="gnis:feature_id" v="2518781"/>
     <tag k="name" v="Center For Natural Sciences"/>
@@ -84613,6 +84884,7 @@
     <tag k="addr:street" v="Hudson Street"/>
     <tag k="amenity" v="social_facility"/>
     <tag k="building" v="yes"/>
+    <tag k="check_date" v="2026-04-25"/>
     <tag k="ele" v="205"/>
     <tag k="gnis:feature_id" v="2370123"/>
     <tag k="name" v="Oak Hill Manor Nursing Home"/>
@@ -86047,7 +86319,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Warren Road"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="school"/>
     <tag k="nysgissam:nysaddresspointid" v="TOMP017857"/>
   </way>
   <way id="235082814">
@@ -86131,7 +86403,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Warren Road"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="school"/>
     <tag k="nysgissam:nysaddresspointid" v="TOMP039628"/>
   </way>
   <way id="237176465">
@@ -86169,7 +86441,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Warren Road"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="school"/>
     <tag k="nysgissam:nysaddresspointid" v="TOMP039324"/>
   </way>
   <way id="237176467">
@@ -86202,7 +86474,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Warren Road"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="school"/>
     <tag k="nysgissam:nysaddresspointid" v="TOMP039350"/>
   </way>
   <way id="237176468">
@@ -86273,7 +86545,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="Warren Road"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="school"/>
     <tag k="nysgissam:nysaddresspointid" v="TOMP039629"/>
   </way>
   <way id="237300468">
@@ -88193,6 +88465,7 @@
     <nd ref="213483664"/>
     <tag k="highway" v="unclassified"/>
     <tag k="name" v="Grant Egbert Blvd East"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Main Campus"/>
@@ -88216,6 +88489,8 @@
     <nd ref="7847829762"/>
     <nd ref="213483664"/>
     <tag k="highway" v="unclassified"/>
+    <tag k="lane_markings" v="no"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="321610554">
     <nd ref="213431222"/>
@@ -90071,6 +90346,7 @@
     <tag k="name" v="Coddington Road"/>
     <tag k="name_1" v="County Road 119"/>
     <tag k="ref" v="CR 119"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Coddington"/>
@@ -90097,6 +90373,7 @@
     <tag k="highway" v="residential"/>
     <tag k="name" v="Textor Circle"/>
     <tag k="name_1" v="Main Campus Road"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="East"/>
@@ -90178,6 +90455,7 @@
     <nd ref="213483664"/>
     <tag k="highway" v="unclassified"/>
     <tag k="name" v="Grant Egbert Boulevard"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Main Campus"/>
@@ -100825,6 +101103,7 @@
     <nd ref="4063684617"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="404099095">
     <nd ref="10240865902"/>
@@ -100850,6 +101129,7 @@
     <nd ref="10240865905"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="404099136">
     <nd ref="213490788"/>
@@ -111881,7 +112161,9 @@
     <nd ref="6760586371"/>
     <nd ref="5099726230"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Campus Center Way"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="523951039">
     <nd ref="5099726231"/>
@@ -111902,19 +112184,23 @@
     <nd ref="5099726232"/>
     <nd ref="5099726231"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="Campus Center Way"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="523951040">
     <nd ref="5099726241"/>
     <nd ref="5099726242"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="523951044">
     <nd ref="5099726245"/>
     <nd ref="5099726246"/>
     <nd ref="5099726247"/>
     <tag k="highway" v="service"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="523951045">
     <nd ref="5099726253"/>
@@ -121797,6 +122083,7 @@
     <nd ref="5219191987"/>
     <nd ref="5219191990"/>
     <tag k="amenity" v="parking"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="539355161">
     <nd ref="5219191994"/>
@@ -121859,7 +122146,7 @@
     <tag k="addr:postcode" v="14850"/>
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="East State Street"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="dormitory"/>
     <tag k="name" v="Schuyler House"/>
     <tag k="nysgissam:nysaddresspointid" v="TOMP009209"/>
   </way>
@@ -169955,6 +170242,7 @@
     <nd ref="5267755856"/>
     <nd ref="5231295013"/>
     <nd ref="5231295014"/>
+    <nd ref="13759836869"/>
     <nd ref="5267755855"/>
     <nd ref="5267755854"/>
     <nd ref="5267755853"/>
@@ -184238,7 +184526,7 @@
     <nd ref="5271018434"/>
     <nd ref="5271018438"/>
     <nd ref="5271018439"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="apartments"/>
   </way>
   <way id="545366096">
     <nd ref="5271018447"/>
@@ -184267,7 +184555,7 @@
     <nd ref="5271018452"/>
     <nd ref="5271018454"/>
     <nd ref="5271018455"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="residential"/>
   </way>
   <way id="545366100">
     <nd ref="5271018459"/>
@@ -184275,7 +184563,7 @@
     <nd ref="5271018456"/>
     <nd ref="5271018458"/>
     <nd ref="5271018459"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="residential"/>
   </way>
   <way id="545366101">
     <nd ref="5271018463"/>
@@ -197337,7 +197625,7 @@
     <nd ref="5287150564"/>
     <nd ref="5287150566"/>
     <nd ref="5287150567"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="detached"/>
   </way>
   <way id="547196398">
     <nd ref="5287150571"/>
@@ -197345,7 +197633,7 @@
     <nd ref="5287150568"/>
     <nd ref="5287150570"/>
     <nd ref="5287150571"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="detached"/>
   </way>
   <way id="547196399">
     <nd ref="5287150581"/>
@@ -198893,6 +199181,7 @@
     <nd ref="5296205000"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="548202368">
     <nd ref="213507621"/>
@@ -198904,6 +199193,7 @@
     <nd ref="5296205003"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="548202369">
     <nd ref="5296205007"/>
@@ -198915,7 +199205,9 @@
     <nd ref="5296205013"/>
     <nd ref="5296205014"/>
     <nd ref="5296205007"/>
+    <tag k="access" v="private"/>
     <tag k="amenity" v="parking"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="548202370">
     <nd ref="5296205015"/>
@@ -213853,14 +214145,6 @@
     <tag k="nysgissam:nysaddresspointid" v="TOMP026554"/>
     <tag k="source" v="NYS GIS OpenData and ESRI sat imagery"/>
   </way>
-  <way id="617192980">
-    <nd ref="5834493375"/>
-    <nd ref="5834493376"/>
-    <nd ref="5834493377"/>
-    <nd ref="5834493378"/>
-    <nd ref="5834493375"/>
-    <tag k="building" v="yes"/>
-  </way>
   <way id="617192982">
     <nd ref="5834493492"/>
     <nd ref="5834493493"/>
@@ -214223,6 +214507,7 @@
     <tag k="name" v="Coddington Road"/>
     <tag k="name_1" v="County Road 119"/>
     <tag k="ref" v="CR 119"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Coddington"/>
@@ -214376,6 +214661,7 @@
     <nd ref="10240865906"/>
     <nd ref="213440542"/>
     <tag k="highway" v="residential"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="South Avenue"/>
     <tag k="oneway" v="yes"/>
     <tag k="surface" v="asphalt"/>
@@ -216392,6 +216678,7 @@
     <tag k="name" v="Danby Road"/>
     <tag k="name_1" v="State Highway 96B"/>
     <tag k="ref" v="NY 96B"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="677165038">
     <nd ref="1045327929"/>
@@ -216444,6 +216731,7 @@
     <tag k="name" v="Danby Road"/>
     <tag k="name_1" v="State Highway 96B"/>
     <tag k="ref" v="NY 96B"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="677165045">
     <nd ref="213443721"/>
@@ -216459,6 +216747,7 @@
     <tag k="name" v="Danby Road"/>
     <tag k="name_1" v="State Highway 96B"/>
     <tag k="ref" v="NY 96B"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="677165046">
     <nd ref="213443682"/>
@@ -217253,6 +217542,7 @@
     <tag k="name" v="Danby Road"/>
     <tag k="name_1" v="State Highway 96B"/>
     <tag k="ref" v="NY 96B"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="677344829">
     <nd ref="1312550490"/>
@@ -222728,6 +223018,7 @@
     <nd ref="6533226980"/>
     <nd ref="6533226977"/>
     <tag k="amenity" v="parking"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="697801296">
     <nd ref="6553275350"/>
@@ -224437,6 +224728,7 @@
     <nd ref="213450109"/>
     <tag k="highway" v="residential"/>
     <tag k="name" v="Textor Circle"/>
+    <tag k="surface" v="asphalt"/>
     <tag k="tiger:cfcc" v="A41"/>
     <tag k="tiger:county" v="Tompkins, NY"/>
     <tag k="tiger:name_base" v="Farm"/>
@@ -224970,6 +225262,7 @@
     <nd ref="6760877307"/>
     <tag k="amenity" v="parking"/>
     <tag k="name" v="O Lot (Red Section)"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="720388780">
     <nd ref="6760877307"/>
@@ -225003,6 +225296,7 @@
     <nd ref="6760877307"/>
     <tag k="amenity" v="parking"/>
     <tag k="name" v="O Lot (Blue Section)"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="720388781">
     <nd ref="6760877329"/>
@@ -225015,6 +225309,7 @@
     <nd ref="7847829732"/>
     <nd ref="6760877330"/>
     <tag k="highway" v="service"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="720388782">
     <nd ref="6760866111"/>
@@ -225061,6 +225356,7 @@
     <nd ref="6760866121"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="720388783">
     <nd ref="6760866126"/>
@@ -225077,6 +225373,7 @@
     <nd ref="6760877355"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="720388784">
     <nd ref="6760877356"/>
@@ -225085,6 +225382,7 @@
     <nd ref="6760877328"/>
     <tag k="highway" v="service"/>
     <tag k="source" v="maxar"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="720388786">
     <nd ref="6760877370"/>
@@ -225197,6 +225495,7 @@
     <nd ref="6760877309"/>
     <tag k="amenity" v="parking"/>
     <tag k="name" v="S Lot"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="720390173">
     <nd ref="6760866112"/>
@@ -225229,6 +225528,7 @@
     <nd ref="213483644"/>
     <tag k="amenity" v="parking"/>
     <tag k="name" v="S Lot (Extension)"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="720390175">
     <nd ref="6760866142"/>
@@ -225271,6 +225571,7 @@
     <nd ref="6760866154"/>
     <tag k="amenity" v="parking"/>
     <tag k="name" v="U Lot"/>
+    <tag k="parking" v="surface"/>
   </way>
   <way id="720390178">
     <nd ref="213451704"/>
@@ -314161,7 +314462,7 @@
     <nd ref="368060064"/>
     <nd ref="8418987620"/>
     <nd ref="8418987621"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="university"/>
     <tag k="name" v="Egbert Hall"/>
   </way>
   <way id="906959741">
@@ -318599,7 +318900,7 @@
     <nd ref="9319877654"/>
     <nd ref="9319877655"/>
     <nd ref="9319877652"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="detached"/>
   </way>
   <way id="1010101660">
     <nd ref="9319877656"/>
@@ -318613,7 +318914,7 @@
     <nd ref="9319877664"/>
     <nd ref="9319877665"/>
     <nd ref="9319877656"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="detached"/>
   </way>
   <way id="1010101661">
     <nd ref="9319877666"/>
@@ -318621,7 +318922,7 @@
     <nd ref="9319877668"/>
     <nd ref="9319877669"/>
     <nd ref="9319877666"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="detached"/>
   </way>
   <way id="1010101662">
     <nd ref="9319877670"/>
@@ -318629,7 +318930,7 @@
     <nd ref="9319877672"/>
     <nd ref="9319877673"/>
     <nd ref="9319877670"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="detached"/>
   </way>
   <way id="1013094440">
     <nd ref="9346634460"/>
@@ -323424,7 +323725,7 @@
     <nd ref="10172259912"/>
     <nd ref="10172259913"/>
     <nd ref="10172259902"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="apartments"/>
   </way>
   <way id="1111871435">
     <nd ref="10172275217"/>
@@ -323438,7 +323739,7 @@
     <nd ref="10172275225"/>
     <nd ref="10172275226"/>
     <nd ref="10172275217"/>
-    <tag k="building" v="yes"/>
+    <tag k="building" v="detached"/>
   </way>
   <way id="1111871439">
     <nd ref="10172275239"/>
@@ -325615,6 +325916,7 @@
     <nd ref="10234850817"/>
     <tag k="highway" v="service"/>
     <tag k="service" v="parking_aisle"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="1119079027">
     <nd ref="469251817"/>
@@ -329811,12 +330113,14 @@
     <nd ref="10572200635"/>
     <nd ref="10572200636"/>
     <tag k="highway" v="service"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="1133979974">
     <nd ref="10572200641"/>
     <nd ref="10572200642"/>
     <nd ref="10572200643"/>
     <tag k="highway" v="service"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="1133979976">
     <nd ref="10572200652"/>
@@ -334468,6 +334772,7 @@
     <nd ref="213492593"/>
     <nd ref="213440021"/>
     <tag k="highway" v="tertiary"/>
+    <tag k="lane_markings" v="no"/>
     <tag k="name" v="East Buffalo Street"/>
     <tag k="sidewalk:both" v="separate"/>
     <tag k="surface" v="asphalt"/>
@@ -335104,6 +335409,7 @@
     <nd ref="11115385928"/>
     <nd ref="11115385927"/>
     <tag k="highway" v="service"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="1198163305">
     <nd ref="11115385930"/>
@@ -340240,6 +340546,7 @@
     <nd ref="12106741036"/>
     <nd ref="12106741035"/>
     <tag k="highway" v="service"/>
+    <tag k="surface" v="asphalt"/>
   </way>
   <way id="1307323391">
     <nd ref="12106741037"/>
@@ -344530,6 +344837,11 @@
     <nd ref="12873159740"/>
     <nd ref="12873159741"/>
     <nd ref="12873159738"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="129"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Elmira Road"/>
     <tag k="building" v="yes"/>
   </way>
   <way id="1392053047">
@@ -347743,6 +348055,448 @@
     <tag k="addr:state" v="NY"/>
     <tag k="addr:street" v="South Aurora Street"/>
     <tag k="building" v="house"/>
+  </way>
+  <way id="1503484264">
+    <nd ref="13759855324"/>
+    <nd ref="13759855325"/>
+    <nd ref="13759855326"/>
+    <nd ref="13759855327"/>
+    <nd ref="13759855324"/>
+    <tag k="access" v="yes"/>
+    <tag k="amenity" v="toilets"/>
+    <tag k="building" v="yes"/>
+    <tag k="female" v="yes"/>
+    <tag k="male" v="yes"/>
+    <tag k="toilets:disposal" v="flush"/>
+  </way>
+  <way id="1503484580">
+    <nd ref="5287150556"/>
+    <nd ref="5287150551"/>
+    <nd ref="5249014305"/>
+    <nd ref="5249014304"/>
+    <nd ref="5287150556"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="202"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="King Street"/>
+    <tag k="amenity" v="school"/>
+    <tag k="building" v="school"/>
+    <tag k="education" v="school"/>
+    <tag k="gnis:feature_id" v="949880"/>
+    <tag k="name" v="Fall Creek Elementary School"/>
+    <tag k="operator" v="Ithaca City School District"/>
+    <tag k="operator:type" v="public/government"/>
+    <tag k="website" v="https://www.ithacacityschools.org/o/fallcreek"/>
+  </way>
+  <way id="1503486056">
+    <nd ref="11352522643"/>
+    <nd ref="13759887471"/>
+    <nd ref="13759887472"/>
+    <nd ref="13759887473"/>
+    <nd ref="13759887474"/>
+    <nd ref="13759887475"/>
+    <nd ref="13759887476"/>
+    <nd ref="13759887477"/>
+    <nd ref="2420422851"/>
+    <nd ref="11352522643"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="560"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Warren Road"/>
+    <tag k="amenity" v="school"/>
+    <tag k="education" v="school"/>
+    <tag k="name" v="Dewitt Middle School"/>
+    <tag k="operator" v="Ithaca City School District"/>
+    <tag k="operator:type" v="public/government"/>
+    <tag k="website" v="https://www.ithacacityschools.org/o/dewitt"/>
+  </way>
+  <way id="1503486057">
+    <nd ref="13759887478"/>
+    <nd ref="13759887479"/>
+    <nd ref="13759887480"/>
+    <nd ref="2262752159"/>
+    <nd ref="2262752209"/>
+    <nd ref="13759887481"/>
+    <nd ref="13759887482"/>
+    <nd ref="13759887483"/>
+    <nd ref="13759887484"/>
+    <nd ref="13759887485"/>
+    <nd ref="8796622777"/>
+    <nd ref="13759887486"/>
+    <nd ref="13759887478"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="555"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Warren Road"/>
+    <tag k="amenity" v="school"/>
+    <tag k="education" v="school"/>
+    <tag k="name" v="TST BOCES"/>
+    <tag k="phone" v="+1-607-257-1551"/>
+    <tag k="polling_station" v="yes"/>
+    <tag k="website" v="https://www.tstboces.org/"/>
+  </way>
+  <way id="1503486058">
+    <nd ref="13759887487"/>
+    <nd ref="13759887488"/>
+    <nd ref="13759887489"/>
+    <nd ref="13759887490"/>
+    <nd ref="13759887491"/>
+    <nd ref="13759887492"/>
+    <nd ref="13759887493"/>
+    <nd ref="13759887494"/>
+    <nd ref="13759887495"/>
+    <nd ref="13759887496"/>
+    <nd ref="13759887497"/>
+    <nd ref="13759887498"/>
+    <nd ref="13759887499"/>
+    <nd ref="13759887500"/>
+    <nd ref="13759902501"/>
+    <nd ref="13759902502"/>
+    <nd ref="13759902503"/>
+    <nd ref="13759902504"/>
+    <nd ref="13759902505"/>
+    <nd ref="13759902506"/>
+    <nd ref="13759902507"/>
+    <nd ref="13759902508"/>
+    <nd ref="13759902509"/>
+    <nd ref="13759902510"/>
+    <nd ref="13759902511"/>
+    <nd ref="13759902512"/>
+    <nd ref="13759902513"/>
+    <nd ref="13759902514"/>
+    <nd ref="13759902515"/>
+    <nd ref="13759902516"/>
+    <nd ref="13759902517"/>
+    <nd ref="13759902518"/>
+    <nd ref="13759902519"/>
+    <nd ref="13759902520"/>
+    <nd ref="13759902521"/>
+    <nd ref="13759902522"/>
+    <nd ref="13759902523"/>
+    <nd ref="13759887487"/>
+    <tag k="leisure" v="playground"/>
+  </way>
+  <way id="1503486059">
+    <nd ref="13759902524"/>
+    <nd ref="13759902525"/>
+    <nd ref="13759902526"/>
+    <nd ref="13759902527"/>
+    <nd ref="13759902528"/>
+    <nd ref="13759902529"/>
+    <nd ref="13759902530"/>
+    <nd ref="13759902531"/>
+    <nd ref="13759902532"/>
+    <nd ref="13759902533"/>
+    <nd ref="13759902534"/>
+    <nd ref="13759902535"/>
+    <nd ref="13759902536"/>
+    <nd ref="13759902537"/>
+    <nd ref="13759902538"/>
+    <nd ref="13759902539"/>
+    <nd ref="13759902540"/>
+    <nd ref="13759902541"/>
+    <nd ref="13759902542"/>
+    <nd ref="13759902543"/>
+    <nd ref="13759902544"/>
+    <nd ref="13759902545"/>
+    <nd ref="13759902546"/>
+    <nd ref="13759902547"/>
+    <nd ref="13759902548"/>
+    <nd ref="13759902549"/>
+    <nd ref="13759902550"/>
+    <nd ref="13759902551"/>
+    <nd ref="13759902552"/>
+    <nd ref="13759902553"/>
+    <nd ref="13759902554"/>
+    <nd ref="13759902555"/>
+    <nd ref="13759902556"/>
+    <nd ref="13759902557"/>
+    <nd ref="13759902558"/>
+    <nd ref="13759902559"/>
+    <nd ref="13759902524"/>
+    <tag k="leisure" v="playground"/>
+  </way>
+  <way id="1503486060">
+    <nd ref="13759902560"/>
+    <nd ref="13759902561"/>
+    <nd ref="13759902562"/>
+    <nd ref="13759902563"/>
+    <nd ref="13759902564"/>
+    <nd ref="829661088"/>
+    <nd ref="829661076"/>
+    <nd ref="829661097"/>
+    <nd ref="10174588125"/>
+    <nd ref="10174588124"/>
+    <nd ref="10174588123"/>
+    <nd ref="829688793"/>
+    <nd ref="13759902565"/>
+    <nd ref="13759902560"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="425"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Winthrop Drive"/>
+    <tag k="amenity" v="school"/>
+    <tag k="education" v="school"/>
+    <tag k="gnis:feature_id" v="958962"/>
+    <tag k="name" v="Northeast Elementary School"/>
+    <tag k="operator" v="Ithaca City School District"/>
+    <tag k="operator:type" v="public/government"/>
+    <tag k="website" v="https://www.ithacacityschools.org/o/northeast"/>
+  </way>
+  <way id="1503487768">
+    <nd ref="13759899441"/>
+    <nd ref="13759899442"/>
+    <nd ref="13759899445"/>
+    <nd ref="13759899443"/>
+    <nd ref="13759899444"/>
+    <nd ref="13759899441"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="111"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Giles Street"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487769">
+    <nd ref="13759899446"/>
+    <nd ref="13759899447"/>
+    <nd ref="13759899448"/>
+    <nd ref="13759899449"/>
+    <nd ref="13759899446"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487770">
+    <nd ref="13759899450"/>
+    <nd ref="13759899451"/>
+    <nd ref="13759899452"/>
+    <nd ref="13759899453"/>
+    <nd ref="13759899450"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="127"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Giles Street"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487771">
+    <nd ref="13759899454"/>
+    <nd ref="13759899455"/>
+    <nd ref="13759899456"/>
+    <nd ref="13759899457"/>
+    <nd ref="13759899454"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487772">
+    <nd ref="13759899458"/>
+    <nd ref="13759899459"/>
+    <nd ref="13759899460"/>
+    <nd ref="13759899461"/>
+    <nd ref="13759899458"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487773">
+    <nd ref="13759899462"/>
+    <nd ref="13759899463"/>
+    <nd ref="13759899464"/>
+    <nd ref="13759899465"/>
+    <nd ref="13759899462"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487774">
+    <nd ref="13759899466"/>
+    <nd ref="13759899467"/>
+    <nd ref="13759899468"/>
+    <nd ref="13759899469"/>
+    <nd ref="13759899466"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="133"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Giles Street"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487776">
+    <nd ref="13759899499"/>
+    <nd ref="13759899500"/>
+    <nd ref="13759923801"/>
+    <nd ref="13759923802"/>
+    <nd ref="13759899499"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487777">
+    <nd ref="13759923803"/>
+    <nd ref="13759923804"/>
+    <nd ref="13759923805"/>
+    <nd ref="13759923806"/>
+    <nd ref="13759923803"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487778">
+    <nd ref="13759923807"/>
+    <nd ref="13759923808"/>
+    <nd ref="13759923809"/>
+    <nd ref="13759923810"/>
+    <nd ref="13759923807"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487779">
+    <nd ref="13759923811"/>
+    <nd ref="13759923812"/>
+    <nd ref="13759923813"/>
+    <nd ref="13759923814"/>
+    <nd ref="13759923811"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487780">
+    <nd ref="13759923815"/>
+    <nd ref="13759923816"/>
+    <nd ref="13759923817"/>
+    <nd ref="13759923818"/>
+    <nd ref="13759923815"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487781">
+    <nd ref="13759923819"/>
+    <nd ref="13759923820"/>
+    <nd ref="13759923821"/>
+    <nd ref="13759923822"/>
+    <nd ref="13759923819"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487782">
+    <nd ref="13759923823"/>
+    <nd ref="13759923824"/>
+    <nd ref="13759923825"/>
+    <nd ref="13759923826"/>
+    <nd ref="13759923827"/>
+    <nd ref="13759923828"/>
+    <nd ref="13759923823"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487783">
+    <nd ref="13759923829"/>
+    <nd ref="13759923830"/>
+    <nd ref="13759923831"/>
+    <nd ref="13759923832"/>
+    <nd ref="13759923829"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487784">
+    <nd ref="13759923833"/>
+    <nd ref="13759923834"/>
+    <nd ref="13759923835"/>
+    <nd ref="13759923836"/>
+    <nd ref="13759923833"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487785">
+    <nd ref="13759923837"/>
+    <nd ref="13759923838"/>
+    <nd ref="13759923839"/>
+    <nd ref="13759923840"/>
+    <nd ref="13759923837"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="110"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Ferris Place"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487786">
+    <nd ref="13759923841"/>
+    <nd ref="13759923842"/>
+    <nd ref="13759923843"/>
+    <nd ref="13759923844"/>
+    <nd ref="13759923841"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="108"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Ferris Place"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487787">
+    <nd ref="13759923845"/>
+    <nd ref="13759923846"/>
+    <nd ref="13759923847"/>
+    <nd ref="13759923848"/>
+    <nd ref="13759923845"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="109"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="Elston Place"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487788">
+    <nd ref="13759923849"/>
+    <nd ref="13759923850"/>
+    <nd ref="13759923851"/>
+    <nd ref="13759923852"/>
+    <nd ref="13759923849"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487789">
+    <nd ref="13759923853"/>
+    <nd ref="13759923854"/>
+    <nd ref="13759923855"/>
+    <nd ref="13759923856"/>
+    <nd ref="13759923853"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="505"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="East State Street"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487790">
+    <nd ref="13759923857"/>
+    <nd ref="13759923858"/>
+    <nd ref="13759923859"/>
+    <nd ref="13759923860"/>
+    <nd ref="13759923857"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487791">
+    <nd ref="13759923861"/>
+    <nd ref="13759923862"/>
+    <nd ref="13759923863"/>
+    <nd ref="13759923864"/>
+    <nd ref="13759923861"/>
+    <tag k="addr:city" v="Ithaca"/>
+    <tag k="addr:housenumber" v="515"/>
+    <tag k="addr:postcode" v="14850"/>
+    <tag k="addr:state" v="NY"/>
+    <tag k="addr:street" v="East State Street"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487792">
+    <nd ref="13759923865"/>
+    <nd ref="13759923866"/>
+    <nd ref="13759923867"/>
+    <nd ref="13759923868"/>
+    <nd ref="13759923865"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487793">
+    <nd ref="13759923869"/>
+    <nd ref="13759923870"/>
+    <nd ref="13759923871"/>
+    <nd ref="13759923872"/>
+    <nd ref="13759923869"/>
+    <tag k="building" v="yes"/>
+  </way>
+  <way id="1503487794">
+    <nd ref="13759923873"/>
+    <nd ref="13759923874"/>
+    <nd ref="13759923875"/>
+    <nd ref="13759923876"/>
+    <nd ref="13759923873"/>
+    <tag k="building" v="yes"/>
   </way>
   <relation id="7537066">
     <member type="way" ref="520911788" role="outer"/>
@@ -354925,10 +355679,6 @@
   <node id="5834493372" lat="42.4089393" lon="-76.5119781"/>
   <node id="5834493373" lat="42.4089178" lon="-76.5118661"/>
   <node id="5834493374" lat="42.4090473" lon="-76.5118205"/>
-  <node id="5834493375" lat="42.4096553" lon="-76.5123914"/>
-  <node id="5834493376" lat="42.4096278" lon="-76.5123304"/>
-  <node id="5834493377" lat="42.4096626" lon="-76.5123016"/>
-  <node id="5834493378" lat="42.4096901" lon="-76.5123626"/>
   <node id="7705471934" lat="42.4115120" lon="-76.5077718"/>
   <node id="7705481082" lat="42.4107654" lon="-76.5079212"/>
   <node id="7705500968" lat="42.4094758" lon="-76.5089340"/>
@@ -355051,6 +355801,10 @@
   <node id="10242872318" lat="42.4100174" lon="-76.5110317"/>
   <node id="13373126601" lat="42.4096078" lon="-76.5106430"/>
   <node id="13373126602" lat="42.4093176" lon="-76.5102037"/>
+  <node id="13759855324" lat="42.4096839" lon="-76.5123603"/>
+  <node id="13759855325" lat="42.4096523" lon="-76.5123861"/>
+  <node id="13759855326" lat="42.4096302" lon="-76.5123364"/>
+  <node id="13759855327" lat="42.4096618" lon="-76.5123106"/>
   <node id="213425055" lat="42.4179650" lon="-76.5152788"/>
   <node id="213425059" lat="42.4180344" lon="-76.5155438"/>
   <node id="213428009" lat="42.4181122" lon="-76.5195708"/>
@@ -405680,6 +406434,8 @@
   <node id="5248097655" lat="42.4492799" lon="-76.4991931"/>
   <node id="5248097656" lat="42.4492737" lon="-76.4993746"/>
   <node id="5249014300" lat="42.4503741" lon="-76.4962297"/>
+  <node id="5249014304" lat="42.4504042" lon="-76.4950904"/>
+  <node id="5249014305" lat="42.4503718" lon="-76.4961300"/>
   <node id="5249014309" lat="42.4501793" lon="-76.4974211"/>
   <node id="5249014311" lat="42.4502450" lon="-76.4973226"/>
   <node id="5249014315" lat="42.4503346" lon="-76.4974315"/>
@@ -408518,6 +409274,7 @@
   <node id="12528606519" lat="42.4497830" lon="-76.4973959"/>
   <node id="12528606521" lat="42.4469363" lon="-76.4972115"/>
   <node id="13327523824" lat="42.4447172" lon="-76.4995063"/>
+  <node id="13759836869" lat="42.4507064" lon="-76.4959413"/>
   <node id="213423945" lat="42.4525146" lon="-76.5055723"/>
   <node id="213423954" lat="42.4529354" lon="-76.5046015"/>
   <node id="213434884" lat="42.4515542" lon="-76.5033321"/>
@@ -410913,7 +411670,9 @@
   <node id="5287149617" lat="42.4526035" lon="-76.4953676"/>
   <node id="5287149618" lat="42.4526025" lon="-76.4954478"/>
   <node id="5287150550" lat="42.4512970" lon="-76.4962910"/>
+  <node id="5287150551" lat="42.4513022" lon="-76.4961835"/>
   <node id="5287150555" lat="42.4514211" lon="-76.4951423"/>
+  <node id="5287150556" lat="42.4513347" lon="-76.4951437"/>
   <node id="5287150559" lat="42.4514580" lon="-76.4963006"/>
   <node id="5287150563" lat="42.4521605" lon="-76.4947349"/>
   <node id="5300062699" lat="42.4541906" lon="-76.4999589"/>
@@ -423175,6 +423934,25 @@
   <node id="11115386286" lat="42.4340896" lon="-76.4925158"/>
   <node id="12294058635" lat="42.4368501" lon="-76.4901084"/>
   <node id="13738940868" lat="42.4341562" lon="-76.4932504"/>
+  <node id="13759899452" lat="42.4378387" lon="-76.4911809"/>
+  <node id="13759899456" lat="42.4378217" lon="-76.4917820"/>
+  <node id="13759899457" lat="42.4378113" lon="-76.4919477"/>
+  <node id="13759899458" lat="42.4378432" lon="-76.4917698"/>
+  <node id="13759899459" lat="42.4377312" lon="-76.4917625"/>
+  <node id="13759899460" lat="42.4377370" lon="-76.4915999"/>
+  <node id="13759899461" lat="42.4378490" lon="-76.4916072"/>
+  <node id="13759899462" lat="42.4378143" lon="-76.4915847"/>
+  <node id="13759899463" lat="42.4376650" lon="-76.4915692"/>
+  <node id="13759899464" lat="42.4376722" lon="-76.4914410"/>
+  <node id="13759899465" lat="42.4378215" lon="-76.4914565"/>
+  <node id="13759899466" lat="42.4377436" lon="-76.4908685"/>
+  <node id="13759899467" lat="42.4376803" lon="-76.4909284"/>
+  <node id="13759899468" lat="42.4376381" lon="-76.4908467"/>
+  <node id="13759899469" lat="42.4377014" lon="-76.4907867"/>
+  <node id="13759899499" lat="42.4378015" lon="-76.4888552"/>
+  <node id="13759899500" lat="42.4377311" lon="-76.4888364"/>
+  <node id="13759923801" lat="42.4377495" lon="-76.4887097"/>
+  <node id="13759923802" lat="42.4378199" lon="-76.4887285"/>
   <node id="213411369" lat="42.4361209" lon="-76.4857921"/>
   <node id="213417112" lat="42.4341860" lon="-76.4826610"/>
   <node id="213417115" lat="42.4341860" lon="-76.4827330"/>
@@ -427636,6 +428414,94 @@
   <node id="13396661077" lat="42.4409321" lon="-76.4925444"/>
   <node id="13417974431" lat="42.4408514" lon="-76.4874306"/>
   <node id="13417974437" lat="42.4408562" lon="-76.4873350"/>
+  <node id="13759899441" lat="42.4382641" lon="-76.4921724"/>
+  <node id="13759899442" lat="42.4381804" lon="-76.4921801"/>
+  <node id="13759899443" lat="42.4381742" lon="-76.4920558"/>
+  <node id="13759899444" lat="42.4382579" lon="-76.4920481"/>
+  <node id="13759899445" lat="42.4381763" lon="-76.4920977"/>
+  <node id="13759899446" lat="42.4382163" lon="-76.4919067"/>
+  <node id="13759899447" lat="42.4381348" lon="-76.4919474"/>
+  <node id="13759899448" lat="42.4381022" lon="-76.4918276"/>
+  <node id="13759899449" lat="42.4381838" lon="-76.4917869"/>
+  <node id="13759899450" lat="42.4379443" lon="-76.4912134"/>
+  <node id="13759899451" lat="42.4378751" lon="-76.4912671"/>
+  <node id="13759899453" lat="42.4379079" lon="-76.4911272"/>
+  <node id="13759899454" lat="42.4379239" lon="-76.4919608"/>
+  <node id="13759899455" lat="42.4379344" lon="-76.4917950"/>
+  <node id="13759923803" lat="42.4379660" lon="-76.4887256"/>
+  <node id="13759923804" lat="42.4378829" lon="-76.4887191"/>
+  <node id="13759923805" lat="42.4378878" lon="-76.4886043"/>
+  <node id="13759923806" lat="42.4379709" lon="-76.4886108"/>
+  <node id="13759923807" lat="42.4380963" lon="-76.4887452"/>
+  <node id="13759923808" lat="42.4380035" lon="-76.4887386"/>
+  <node id="13759923809" lat="42.4380084" lon="-76.4886118"/>
+  <node id="13759923810" lat="42.4381012" lon="-76.4886183"/>
+  <node id="13759923811" lat="42.4381318" lon="-76.4894724"/>
+  <node id="13759923812" lat="42.4379867" lon="-76.4894019"/>
+  <node id="13759923813" lat="42.4380269" lon="-76.4892502"/>
+  <node id="13759923814" lat="42.4381719" lon="-76.4893207"/>
+  <node id="13759923815" lat="42.4380948" lon="-76.4890341"/>
+  <node id="13759923816" lat="42.4380209" lon="-76.4890270"/>
+  <node id="13759923817" lat="42.4380293" lon="-76.4888652"/>
+  <node id="13759923818" lat="42.4381032" lon="-76.4888723"/>
+  <node id="13759923819" lat="42.4382173" lon="-76.4890908"/>
+  <node id="13759923820" lat="42.4381359" lon="-76.4890867"/>
+  <node id="13759923821" lat="42.4381407" lon="-76.4889118"/>
+  <node id="13759923822" lat="42.4382221" lon="-76.4889159"/>
+  <node id="13759923823" lat="42.4382490" lon="-76.4888927"/>
+  <node id="13759923824" lat="42.4382009" lon="-76.4888887"/>
+  <node id="13759923825" lat="42.4382024" lon="-76.4888565"/>
+  <node id="13759923826" lat="42.4381877" lon="-76.4888553"/>
+  <node id="13759923827" lat="42.4381914" lon="-76.4887728"/>
+  <node id="13759923828" lat="42.4382542" lon="-76.4887780"/>
+  <node id="13759923829" lat="42.4386673" lon="-76.4887411"/>
+  <node id="13759923830" lat="42.4385746" lon="-76.4888481"/>
+  <node id="13759923831" lat="42.4385247" lon="-76.4887687"/>
+  <node id="13759923832" lat="42.4386174" lon="-76.4886617"/>
+  <node id="13759923833" lat="42.4383145" lon="-76.4895183"/>
+  <node id="13759923834" lat="42.4381828" lon="-76.4894608"/>
+  <node id="13759923835" lat="42.4382135" lon="-76.4893317"/>
+  <node id="13759923836" lat="42.4383452" lon="-76.4893892"/>
+  <node id="13759923837" lat="42.4385004" lon="-76.4895085"/>
+  <node id="13759923838" lat="42.4383965" lon="-76.4895088"/>
+  <node id="13759923839" lat="42.4383963" lon="-76.4894057"/>
+  <node id="13759923840" lat="42.4385002" lon="-76.4894053"/>
+  <node id="13759923841" lat="42.4386789" lon="-76.4895035"/>
+  <node id="13759923842" lat="42.4385733" lon="-76.4895185"/>
+  <node id="13759923843" lat="42.4385619" lon="-76.4893706"/>
+  <node id="13759923844" lat="42.4386675" lon="-76.4893557"/>
+  <node id="13759923845" lat="42.4387122" lon="-76.4898994"/>
+  <node id="13759923846" lat="42.4386282" lon="-76.4899106"/>
+  <node id="13759923847" lat="42.4386160" lon="-76.4897427"/>
+  <node id="13759923848" lat="42.4387000" lon="-76.4897315"/>
+  <node id="13759923849" lat="42.4388311" lon="-76.4890705"/>
+  <node id="13759923850" lat="42.4387399" lon="-76.4891586"/>
+  <node id="13759923851" lat="42.4386713" lon="-76.4890282"/>
+  <node id="13759923852" lat="42.4387624" lon="-76.4889401"/>
+  <node id="13759923853" lat="42.4391849" lon="-76.4916527"/>
+  <node id="13759923854" lat="42.4391038" lon="-76.4916594"/>
+  <node id="13759923855" lat="42.4390999" lon="-76.4915751"/>
+  <node id="13759923856" lat="42.4391811" lon="-76.4915683"/>
+  <node id="13759923857" lat="42.4391753" lon="-76.4915199"/>
+  <node id="13759923858" lat="42.4391044" lon="-76.4915237"/>
+  <node id="13759923859" lat="42.4391006" lon="-76.4913976"/>
+  <node id="13759923860" lat="42.4391716" lon="-76.4913937"/>
+  <node id="13759923861" lat="42.4391643" lon="-76.4912468"/>
+  <node id="13759923862" lat="42.4390893" lon="-76.4912426"/>
+  <node id="13759923863" lat="42.4390936" lon="-76.4911012"/>
+  <node id="13759923864" lat="42.4391686" lon="-76.4911054"/>
+  <node id="13759923865" lat="42.4391920" lon="-76.4910143"/>
+  <node id="13759923866" lat="42.4390686" lon="-76.4910288"/>
+  <node id="13759923867" lat="42.4390602" lon="-76.4908980"/>
+  <node id="13759923868" lat="42.4391836" lon="-76.4908834"/>
+  <node id="13759923869" lat="42.4391730" lon="-76.4908377"/>
+  <node id="13759923870" lat="42.4390374" lon="-76.4908612"/>
+  <node id="13759923871" lat="42.4390246" lon="-76.4907254"/>
+  <node id="13759923872" lat="42.4391602" lon="-76.4907019"/>
+  <node id="13759923873" lat="42.4391623" lon="-76.4906838"/>
+  <node id="13759923874" lat="42.4390207" lon="-76.4906823"/>
+  <node id="13759923875" lat="42.4390214" lon="-76.4905507"/>
+  <node id="13759923876" lat="42.4391630" lon="-76.4905522"/>
   <node id="213436025" lat="42.4427080" lon="-76.4852530"/>
   <node id="213436028" lat="42.4427540" lon="-76.4852330"/>
   <node id="213436033" lat="42.4428863" lon="-76.4852040"/>
@@ -469052,6 +469918,91 @@
   <node id="13369106236" lat="42.4737021" lon="-76.4690420"/>
   <node id="13369106237" lat="42.4734514" lon="-76.4688913"/>
   <node id="13369106238" lat="42.4733857" lon="-76.4690920"/>
+  <node id="13759887471" lat="42.4765183" lon="-76.4699965"/>
+  <node id="13759887472" lat="42.4762452" lon="-76.4705023"/>
+  <node id="13759887473" lat="42.4754182" lon="-76.4703561"/>
+  <node id="13759887474" lat="42.4752833" lon="-76.4705572"/>
+  <node id="13759887475" lat="42.4748563" lon="-76.4707948"/>
+  <node id="13759887476" lat="42.4747619" lon="-76.4707887"/>
+  <node id="13759887477" lat="42.4746810" lon="-76.4706790"/>
+  <node id="13759887487" lat="42.4732896" lon="-76.4689504"/>
+  <node id="13759887488" lat="42.4732612" lon="-76.4689890"/>
+  <node id="13759887489" lat="42.4732284" lon="-76.4690156"/>
+  <node id="13759887490" lat="42.4731814" lon="-76.4690319"/>
+  <node id="13759887491" lat="42.4731508" lon="-76.4690171"/>
+  <node id="13759887492" lat="42.4731191" lon="-76.4690067"/>
+  <node id="13759887493" lat="42.4730895" lon="-76.4690067"/>
+  <node id="13759887494" lat="42.4730611" lon="-76.4690053"/>
+  <node id="13759887495" lat="42.4730436" lon="-76.4689845"/>
+  <node id="13759887496" lat="42.4730207" lon="-76.4689475"/>
+  <node id="13759887497" lat="42.4730130" lon="-76.4689238"/>
+  <node id="13759887498" lat="42.4730032" lon="-76.4688926"/>
+  <node id="13759887499" lat="42.4729802" lon="-76.4688645"/>
+  <node id="13759887500" lat="42.4729518" lon="-76.4688363"/>
+  <node id="13759902501" lat="42.4729158" lon="-76.4688363"/>
+  <node id="13759902502" lat="42.4728994" lon="-76.4688156"/>
+  <node id="13759902503" lat="42.4728808" lon="-76.4687667"/>
+  <node id="13759902504" lat="42.4728808" lon="-76.4687445"/>
+  <node id="13759902505" lat="42.4729015" lon="-76.4687193"/>
+  <node id="13759902506" lat="42.4729234" lon="-76.4686867"/>
+  <node id="13759902507" lat="42.4729518" lon="-76.4686867"/>
+  <node id="13759902508" lat="42.4729770" lon="-76.4686970"/>
+  <node id="13759902509" lat="42.4730174" lon="-76.4686926"/>
+  <node id="13759902510" lat="42.4730393" lon="-76.4687015"/>
+  <node id="13759902511" lat="42.4730611" lon="-76.4687296"/>
+  <node id="13759902512" lat="42.4730808" lon="-76.4687563"/>
+  <node id="13759902513" lat="42.4730994" lon="-76.4687934"/>
+  <node id="13759902514" lat="42.4731212" lon="-76.4688156"/>
+  <node id="13759902515" lat="42.4731431" lon="-76.4688319"/>
+  <node id="13759902516" lat="42.4731792" lon="-76.4688423"/>
+  <node id="13759902517" lat="42.4731978" lon="-76.4688423"/>
+  <node id="13759902518" lat="42.4732240" lon="-76.4688319"/>
+  <node id="13759902519" lat="42.4732469" lon="-76.4688245"/>
+  <node id="13759902520" lat="42.4732633" lon="-76.4688348"/>
+  <node id="13759902521" lat="42.4732633" lon="-76.4688674"/>
+  <node id="13759902522" lat="42.4732754" lon="-76.4688808"/>
+  <node id="13759902523" lat="42.4732841" lon="-76.4689015"/>
+  <node id="13759902524" lat="42.4738998" lon="-76.4682887"/>
+  <node id="13759902525" lat="42.4738862" lon="-76.4683449"/>
+  <node id="13759902526" lat="42.4738662" lon="-76.4683934"/>
+  <node id="13759902527" lat="42.4738504" lon="-76.4684729"/>
+  <node id="13759902528" lat="42.4738204" lon="-76.4685087"/>
+  <node id="13759902529" lat="42.4738082" lon="-76.4685446"/>
+  <node id="13759902530" lat="42.4737975" lon="-76.4685805"/>
+  <node id="13759902531" lat="42.4737718" lon="-76.4686096"/>
+  <node id="13759902532" lat="42.4737403" lon="-76.4686309"/>
+  <node id="13759902533" lat="42.4737181" lon="-76.4686299"/>
+  <node id="13759902534" lat="42.4737038" lon="-76.4686086"/>
+  <node id="13759902535" lat="42.4737017" lon="-76.4685786"/>
+  <node id="13759902536" lat="42.4736974" lon="-76.4685504"/>
+  <node id="13759902537" lat="42.4736802" lon="-76.4685359"/>
+  <node id="13759902538" lat="42.4736552" lon="-76.4685243"/>
+  <node id="13759902539" lat="42.4736302" lon="-76.4685097"/>
+  <node id="13759902540" lat="42.4736123" lon="-76.4684923"/>
+  <node id="13759902541" lat="42.4735994" lon="-76.4684719"/>
+  <node id="13759902542" lat="42.4735915" lon="-76.4684389"/>
+  <node id="13759902543" lat="42.4735858" lon="-76.4683924"/>
+  <node id="13759902544" lat="42.4735858" lon="-76.4683478"/>
+  <node id="13759902545" lat="42.4735865" lon="-76.4683090"/>
+  <node id="13759902546" lat="42.4736008" lon="-76.4682809"/>
+  <node id="13759902547" lat="42.4736180" lon="-76.4682741"/>
+  <node id="13759902548" lat="42.4736209" lon="-76.4682334"/>
+  <node id="13759902549" lat="42.4736252" lon="-76.4682014"/>
+  <node id="13759902550" lat="42.4736345" lon="-76.4681626"/>
+  <node id="13759902551" lat="42.4736488" lon="-76.4681335"/>
+  <node id="13759902552" lat="42.4736681" lon="-76.4681219"/>
+  <node id="13759902553" lat="42.4736981" lon="-76.4681296"/>
+  <node id="13759902554" lat="42.4737274" lon="-76.4681432"/>
+  <node id="13759902555" lat="42.4737832" lon="-76.4681752"/>
+  <node id="13759902556" lat="42.4738354" lon="-76.4682179"/>
+  <node id="13759902557" lat="42.4738626" lon="-76.4682247"/>
+  <node id="13759902558" lat="42.4738805" lon="-76.4682053"/>
+  <node id="13759902559" lat="42.4738998" lon="-76.4682217"/>
+  <node id="13759902560" lat="42.4739573" lon="-76.4674629"/>
+  <node id="13759902561" lat="42.4739292" lon="-76.4692941"/>
+  <node id="13759902562" lat="42.4738118" lon="-76.4693460"/>
+  <node id="13759902563" lat="42.4727981" lon="-76.4690760"/>
+  <node id="13759902564" lat="42.4719136" lon="-76.4687921"/>
   <node id="213411668" lat="42.4814900" lon="-76.4804590"/>
   <node id="213411669" lat="42.4815210" lon="-76.4791240"/>
   <node id="213415456" lat="42.4815230" lon="-76.4765410"/>
@@ -473259,6 +474210,8 @@
   <node id="1319459699" lat="42.4757059" lon="-76.4673835"/>
   <node id="1319459730" lat="42.4761790" lon="-76.4672957"/>
   <node id="1319459861" lat="42.4758634" lon="-76.4673093"/>
+  <node id="2262752209" lat="42.4748985" lon="-76.4617315"/>
+  <node id="2420422851" lat="42.4747640" lon="-76.4660226"/>
   <node id="2421402563" lat="42.4731719" lon="-76.4673825"/>
   <node id="2421402564" lat="42.4731585" lon="-76.4673316"/>
   <node id="2421402565" lat="42.4731612" lon="-76.4672734"/>
@@ -474009,6 +474962,7 @@
   <node id="5299007633" lat="42.4745358" lon="-76.4619587"/>
   <node id="5632912846" lat="42.4763147" lon="-76.4665577"/>
   <node id="5632912847" lat="42.4749260" lon="-76.4656538"/>
+  <node id="8796622777" lat="42.4763132" lon="-76.4667346"/>
   <node id="10174563608" lat="42.4739458" lon="-76.4672953"/>
   <node id="10174588123" lat="42.4730376" lon="-76.4672217"/>
   <node id="10174588124" lat="42.4729690" lon="-76.4672524"/>
@@ -474027,6 +474981,14 @@
   <node id="11293277103" lat="42.4745204" lon="-76.4652996"/>
   <node id="11293277104" lat="42.4745244" lon="-76.4651841"/>
   <node id="11293277105" lat="42.4745913" lon="-76.4651884"/>
+  <node id="11352522643" lat="42.4765562" lon="-76.4671508"/>
+  <node id="13759887481" lat="42.4747833" lon="-76.4656615"/>
+  <node id="13759887482" lat="42.4748385" lon="-76.4658133"/>
+  <node id="13759887483" lat="42.4748735" lon="-76.4658948"/>
+  <node id="13759887484" lat="42.4754698" lon="-76.4662944"/>
+  <node id="13759887485" lat="42.4760694" lon="-76.4666526"/>
+  <node id="13759887486" lat="42.4764386" lon="-76.4667996"/>
+  <node id="13759902565" lat="42.4731826" lon="-76.4668841"/>
   <node id="213417372" lat="42.4739577" lon="-76.4569183"/>
   <node id="213450070" lat="42.4713580" lon="-76.4555820"/>
   <node id="213454357" lat="42.4754916" lon="-76.4582623"/>
@@ -474830,6 +475792,7 @@
   <node id="829688889" lat="42.4831556" lon="-76.4658713"/>
   <node id="829688894" lat="42.4831655" lon="-76.4655092"/>
   <node id="1312151386" lat="42.4833493" lon="-76.4673305"/>
+  <node id="2262752159" lat="42.4778615" lon="-76.4617895"/>
   <node id="2262800228" lat="42.4833666" lon="-76.4625766"/>
   <node id="2262800229" lat="42.4832881" lon="-76.4648056"/>
   <node id="2262800231" lat="42.4832998" lon="-76.4648061"/>
@@ -475296,6 +476259,10 @@
   <node id="12042753747" lat="42.4800852" lon="-76.4648110"/>
   <node id="12042753748" lat="42.4802155" lon="-76.4650285"/>
   <node id="12042753749" lat="42.4802159" lon="-76.4650149"/>
+  <node id="13759887478" lat="42.4772712" lon="-76.4668750"/>
+  <node id="13759887479" lat="42.4773414" lon="-76.4645631"/>
+  <node id="13759887480" lat="42.4777745" lon="-76.4645428"/>
+  <node id="13759888775" lat="42.4786303" lon="-76.4669037"/>
   <node id="213435230" lat="42.4828423" lon="-76.4548175"/>
   <node id="213435232" lat="42.4828089" lon="-76.4561387"/>
   <node id="213435233" lat="42.4827025" lon="-76.4600822"/>
@@ -486147,6 +487114,8 @@
   <node id="7705497546" lat="42.4881692" lon="-76.4324813"/>
   <node id="7705497767" lat="42.4853467" lon="-76.4319114"/>
   <node id="7705497890" lat="42.4853960" lon="-76.4317710"/>
+  <node id="12004913491" lat="42.4872880" lon="-76.4314149"/>
+  <node id="12008273106" lat="42.4883314" lon="-76.4314762"/>
   <node id="12008518885" lat="42.4884323" lon="-76.4326078"/>
   <node id="12008518886" lat="42.4883962" lon="-76.4326114"/>
   <node id="12008518887" lat="42.4883944" lon="-76.4325779"/>
@@ -486164,6 +487133,7 @@
   <node id="12008518899" lat="42.4879305" lon="-76.4323230"/>
   <node id="12008518900" lat="42.4879295" lon="-76.4322269"/>
   <node id="12008518901" lat="42.4879556" lon="-76.4322254"/>
+  <node id="12008518902" lat="42.4892891" lon="-76.4315324"/>
   <node id="12008518910" lat="42.4881945" lon="-76.4318307"/>
   <node id="12008518924" lat="42.4877134" lon="-76.4319501"/>
   <node id="12008518925" lat="42.4875528" lon="-76.4319405"/>
@@ -486173,6 +487143,8 @@
   <node id="12008518929" lat="42.4876745" lon="-76.4318075"/>
   <node id="12008518930" lat="42.4876756" lon="-76.4318363"/>
   <node id="12008518931" lat="42.4877158" lon="-76.4318379"/>
+  <node id="12008518932" lat="42.4877992" lon="-76.4314449"/>
+  <node id="12008518942" lat="42.4874171" lon="-76.4314225"/>
   <node id="12008518943" lat="42.4875022" lon="-76.4314275"/>
   <node id="12008518944" lat="42.4875223" lon="-76.4318516"/>
   <node id="12008518945" lat="42.4868571" lon="-76.4318947"/>
@@ -486235,14 +487207,98 @@
   <node id="12011186226" lat="42.4850139" lon="-76.4318023"/>
   <node id="12011186227" lat="42.4853280" lon="-76.4313058"/>
   <node id="12011186228" lat="42.4853932" lon="-76.4317242"/>
+  <node id="213448183" lat="42.4918350" lon="-76.4316820"/>
   <node id="7705486147" lat="42.4924288" lon="-76.4319325"/>
   <node id="7705489402" lat="42.4925030" lon="-76.4320797"/>
   <node id="7705492006" lat="42.4924287" lon="-76.4319755"/>
   <node id="7705493624" lat="42.4923837" lon="-76.4319787"/>
   <node id="7705495925" lat="42.4923851" lon="-76.4320782"/>
   <node id="7705497714" lat="42.4925058" lon="-76.4319375"/>
+  <node id="12004913513" lat="42.4950443" lon="-76.4318702"/>
+  <node id="12004913516" lat="42.4956609" lon="-76.4319064"/>
+  <node id="12004913517" lat="42.4963273" lon="-76.4319455"/>
   <node id="12005084099" lat="42.4925016" lon="-76.4317211"/>
+  <node id="12008273072" lat="42.4915802" lon="-76.4316670"/>
+  <node id="12008518198" lat="42.4947504" lon="-76.4318530"/>
+  <node id="12008518200" lat="42.4944603" lon="-76.4318360"/>
+  <node id="12008518210" lat="42.4937158" lon="-76.4317923"/>
   <node id="12008518226" lat="42.4925102" lon="-76.4318643"/>
+  <node id="12008518227" lat="42.4922584" lon="-76.4317068"/>
+  <node id="12008519142" lat="42.4952678" lon="-76.4318833"/>
+  <node id="12008519168" lat="42.4951073" lon="-76.4318739"/>
+  <node id="213448186" lat="42.4973430" lon="-76.4320050"/>
+  <node id="213448189" lat="42.4977430" lon="-76.4320250"/>
+  <node id="213448191" lat="42.4979810" lon="-76.4320390"/>
+  <node id="213448194" lat="42.4980480" lon="-76.4320420"/>
+  <node id="213448196" lat="42.4982280" lon="-76.4320530"/>
+  <node id="213448198" lat="42.5016990" lon="-76.4322510"/>
+  <node id="213448201" lat="42.5024710" lon="-76.4322940"/>
+  <node id="213448204" lat="42.5028320" lon="-76.4323150"/>
+  <node id="11998099465" lat="42.5026582" lon="-76.4323049"/>
+  <node id="11998099490" lat="42.5030487" lon="-76.4323272"/>
+  <node id="11998114792" lat="42.5029000" lon="-76.4323188"/>
+  <node id="11998114801" lat="42.5031814" lon="-76.4323346"/>
+  <node id="11998141594" lat="42.5027689" lon="-76.4323113"/>
+  <node id="12000041946" lat="42.5022088" lon="-76.4322794"/>
+  <node id="12005064906" lat="42.5013374" lon="-76.4322304"/>
+  <node id="12008273120" lat="42.5007402" lon="-76.4321963"/>
+  <node id="12008519143" lat="42.4969396" lon="-76.4319814"/>
+  <node id="12008519193" lat="42.4987061" lon="-76.4320803"/>
+  <node id="12008519195" lat="42.4996689" lon="-76.4321352"/>
+  <node id="213448207" lat="42.5065720" lon="-76.4325250"/>
+  <node id="213448210" lat="42.5098790" lon="-76.4327080"/>
+  <node id="11998099496" lat="42.5037922" lon="-76.4323689"/>
+  <node id="11998099502" lat="42.5045468" lon="-76.4324113"/>
+  <node id="11998099505" lat="42.5050055" lon="-76.4324370"/>
+  <node id="11998099631" lat="42.5075359" lon="-76.4325783"/>
+  <node id="11998099637" lat="42.5082006" lon="-76.4326151"/>
+  <node id="11998099647" lat="42.5083695" lon="-76.4326245"/>
+  <node id="11998099649" lat="42.5088111" lon="-76.4326489"/>
+  <node id="11998099657" lat="42.5092258" lon="-76.4326719"/>
+  <node id="11998114802" lat="42.5036507" lon="-76.4323610"/>
+  <node id="11998114811" lat="42.5047132" lon="-76.4324206"/>
+  <node id="11998114815" lat="42.5062240" lon="-76.4325055"/>
+  <node id="11998114835" lat="42.5074795" lon="-76.4325752"/>
+  <node id="11998114836" lat="42.5051404" lon="-76.4324446"/>
+  <node id="11999994709" lat="42.5094723" lon="-76.4326855"/>
+  <node id="11999994712" lat="42.5073274" lon="-76.4325668"/>
+  <node id="11999994726" lat="42.5050928" lon="-76.4324419"/>
+  <node id="11999994736" lat="42.5041562" lon="-76.4323894"/>
+  <node id="12000041754" lat="42.5094273" lon="-76.4326830"/>
+  <node id="12000041777" lat="42.5090888" lon="-76.4326643"/>
+  <node id="12000041935" lat="42.5074353" lon="-76.4325728"/>
+  <node id="12000041941" lat="42.5069738" lon="-76.4325472"/>
+  <node id="12000041945" lat="42.5041135" lon="-76.4323870"/>
+  <node id="213439443" lat="42.5164260" lon="-76.4330990"/>
+  <node id="213448214" lat="42.5116250" lon="-76.4328250"/>
+  <node id="213448217" lat="42.5116790" lon="-76.4328320"/>
+  <node id="213448219" lat="42.5133520" lon="-76.4329340"/>
+  <node id="5271285750" lat="42.5129458" lon="-76.4329092"/>
+  <node id="5271285752" lat="42.5139976" lon="-76.4329687"/>
+  <node id="5271285754" lat="42.5138691" lon="-76.4329618"/>
+  <node id="5271285756" lat="42.5140984" lon="-76.4329741"/>
+  <node id="5271285760" lat="42.5145493" lon="-76.4329983"/>
+  <node id="5271285859" lat="42.5115450" lon="-76.4328196"/>
+  <node id="5271285892" lat="42.5103676" lon="-76.4327407"/>
+  <node id="11991175613" lat="42.5163401" lon="-76.4330944"/>
+  <node id="11998084519" lat="42.5156948" lon="-76.4330598"/>
+  <node id="11998099665" lat="42.5120055" lon="-76.4328519"/>
+  <node id="11998099668" lat="42.5143332" lon="-76.4329867"/>
+  <node id="11998099671" lat="42.5149987" lon="-76.4330224"/>
+  <node id="11998114867" lat="42.5103197" lon="-76.4327375"/>
+  <node id="11998114868" lat="42.5112915" lon="-76.4328026"/>
+  <node id="11998114882" lat="42.5125878" lon="-76.4328874"/>
+  <node id="11998114883" lat="42.5128659" lon="-76.4329043"/>
+  <node id="11998114889" lat="42.5144922" lon="-76.4329952"/>
+  <node id="11998114899" lat="42.5152783" lon="-76.4330374"/>
+  <node id="11998114900" lat="42.5155163" lon="-76.4330502"/>
+  <node id="11998114907" lat="42.5161074" lon="-76.4330819"/>
+  <node id="11998141610" lat="42.5106838" lon="-76.4327619"/>
+  <node id="11998141623" lat="42.5105582" lon="-76.4327535"/>
+  <node id="11999984552" lat="42.5160431" lon="-76.4330785"/>
+  <node id="11999994676" lat="42.5113653" lon="-76.4328075"/>
+  <node id="11999994679" lat="42.5111712" lon="-76.4327945"/>
+  <node id="12000041742" lat="42.5099448" lon="-76.4327124"/>
   <way id="520883559">
     <nd ref="5076014771"/>
     <nd ref="5076014772"/>
