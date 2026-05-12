@@ -1,0 +1,209 @@
+agent_type =, auto, real time info flag = 0
+, number of activity nodes defined in node.csv=, 31
+, number of boundary activity nodes defined in node.csv=, 14
+Step 1: read network node.csv, link.csv, zone.csv 
+,# of nodes = ,1886
+,# of links =,4534
+,# of zones =,31
+,summary by multi-modal and demand types,demand_period,agent_type,# of links,avg_free_speed_mph,avg_free_speed_kmph,total_length_in_km,total_capacity,avg_lane_capacity,avg_length_in_meter,
+,,AM,auto,4534,39.3988,63.406,1139.76,7.2599e+06,1141.93,251.38,
+,summary by road link type,link_type,link_type_name,# of links,avg_free_speed_mph,avg_free_speed_kmph,,total_length,total_capacity,avg_lane_capacity,avg_length_in_meter,
+,,-1,,0,0,0,0,0,0,0,
+,,1,,49,100.245,161.328,37.3834,301300,2300,762.926,
+,,2,,207,63.285,101.847,64.3851,985600,2200,311.039,
+,,3,,212,66.1887,106.52,96.3382,676800,1800,454.426,
+,,4,,99,57.9798,93.3092,49.3289,216000,1600,498.271,
+,,5,,1350,43.5674,70.1148,409.042,2.6076e+06,1200,302.994,
+,,6,,1779,31.0523,49.9737,301.95,1.791e+06,1000,169.73,
+,,8,,23,28.087,45.2015,2.37808,18400,800,103.395,
+,,15,,815,32.081,51.6292,178.952,663200,800,219.573,
+[real_time_info] 
+,info_updating_freq_in_min= 5 min
+,visual_distance_in_cells= 5 cells
+, # of demand side records in demand_side_scenario.csv=,0,
+Step 2: read demand, defined in [demand_file_list] in settings.csv.
+,o_zone_id,d_zone_id,inside_flag_from,inside_flag_to,volume
+,file_sequence_no=,1,file_name =, demand.csv,demand_period =, AM,departure_time_profile_no=,0,cumulative demand =, 7901.96
+,total demand =, 7901.96
+,from_flag,to_flag,volume
+,from_flag,to_flag,volume
+,0=not related, 1=signficiantly related external but not in cutoff, 2= cut-off external, 3= inside
+,0,1,2,3,
+0,0,0,0,0
+1,0,0,0,0
+2,0,0,0,0
+3,0,0,0,7901.96
+,top 10 OD,rank,o,d,inside_flag_o,inside_flag_d,agent_type,departure_time,volume
+,,1,55,45,3,3,auto,AM,360.819
+,,2,45,55,3,3,auto,AM,287.808
+,,3,55,35,3,3,auto,AM,221.145
+,,4,35,55,3,3,auto,AM,186.495
+,,5,55,36,3,3,auto,AM,171.263
+,,6,55,54,3,3,auto,AM,168.23
+,,7,36,55,3,3,auto,AM,152.503
+,,8,54,55,3,3,auto,AM,138.478
+,,9,55,66,3,3,auto,AM,137.26
+,,10,55,25,3,3,auto,AM,135.062
+,,11,55,65,3,3,auto,AM,133.787
+,,12,25,55,3,3,auto,AM,129.875
+,,13,66,55,3,3,auto,AM,110.491
+,,14,35,45,3,3,auto,AM,106.576
+,,15,45,35,3,3,auto,AM,100.806
+,,16,65,55,3,3,auto,AM,100.432
+,,17,36,45,3,3,auto,AM,82.129
+,,18,55,47,3,3,auto,AM,76.7022
+,,19,55,56,3,3,auto,AM,76.468
+,,20,25,45,3,3,auto,AM,73.7943
+,,21,47,55,3,3,auto,AM,73.669
+,,22,45,36,3,3,auto,AM,73.5693
+,,23,25,35,3,3,auto,AM,72.369
+,,24,36,35,3,3,auto,AM,69.1736
+,,25,35,36,3,3,auto,AM,65.5112
+,,26,35,25,3,3,auto,AM,63.4668
+,,27,55,44,3,3,auto,AM,63.3546
+,,28,45,25,3,3,auto,AM,61.2128
+,,29,56,55,3,3,auto,AM,59.6462
+,,30,54,45,3,3,auto,AM,57.5918
+,,31,45,54,3,3,auto,AM,55.8079
+,,32,25,36,3,3,auto,AM,52.8188
+,,33,55,46,3,3,auto,AM,52.7955
+,,34,44,55,3,3,auto,AM,49.5682
+,,35,36,25,3,3,auto,AM,48.9112
+,,36,55,75,3,3,auto,AM,44.87
+,,37,75,55,3,3,auto,AM,42.3715
+,,38,66,45,3,3,auto,AM,41.8784
+,,39,45,66,3,3,auto,AM,41.4975
+,,40,46,55,3,3,auto,AM,40.3895
+,,41,35,54,3,3,auto,AM,38.3761
+,,42,55,43,3,3,auto,AM,38.3511
+,,43,45,65,3,3,auto,AM,38.1136
+,,44,54,35,3,3,auto,AM,37.4585
+,,45,43,55,3,3,auto,AM,36.6462
+,,46,65,45,3,3,auto,AM,35.8695
+,,47,55,64,3,3,auto,AM,35.1949
+,,48,47,45,3,3,auto,AM,34.7902
+,,49,33,55,3,3,auto,AM,34.637
+,,50,55,33,3,3,auto,AM,34.1397
+,,51,55,34,3,3,auto,AM,32.481
+,,52,64,55,3,3,auto,AM,29.1695
+,,53,45,47,3,3,auto,AM,28.8931
+,,54,36,54,3,3,auto,AM,28.1294
+,,55,47,36,3,3,auto,AM,27.8694
+,,56,35,66,3,3,auto,AM,27.7444
+,,57,25,54,3,3,auto,AM,27.4163
+,,58,34,55,3,3,auto,AM,27.0651
+,,59,55,74,3,3,auto,AM,26.5733
+,,60,66,35,3,3,auto,AM,26.4831
+,,61,74,55,3,3,auto,AM,26.4672
+,,62,36,66,3,3,auto,AM,26.0554
+,,63,54,36,3,3,auto,AM,26.0031
+,,64,36,47,3,3,auto,AM,25.8383
+,,65,47,35,3,3,auto,AM,25.8064
+,,66,45,56,3,3,auto,AM,25.3672
+,,67,35,65,3,3,auto,AM,24.8395
+,,68,56,45,3,3,auto,AM,24.8063
+,,69,45,44,3,3,auto,AM,24.8024
+,,70,44,45,3,3,auto,AM,24.3279
+,,71,55,24,3,3,auto,AM,24.0853
+,,72,66,36,3,3,auto,AM,23.554
+,,73,54,25,3,3,auto,AM,23.4689
+,,74,24,55,3,3,auto,AM,22.9378
+,,75,55,53,3,3,auto,AM,22.9047
+,,76,35,47,3,3,auto,AM,22.6589
+,,77,65,35,3,3,auto,AM,22.1112
+,,78,53,55,3,3,auto,AM,21.7411
+,,79,54,65,3,3,auto,AM,21.353
+,,80,36,65,3,3,auto,AM,20.8367
+,,81,45,46,3,3,auto,AM,20.6686
+,,82,66,65,3,3,auto,AM,20.1053
+,,83,55,57,3,3,auto,AM,20.0416
+,,84,46,45,3,3,auto,AM,19.823
+,,85,73,55,3,3,auto,AM,19.7439
+,,86,54,66,3,3,auto,AM,19.639
+,,87,25,66,3,3,auto,AM,19.6336
+,,88,65,54,3,3,auto,AM,19.4733
+,,89,66,54,3,3,auto,AM,19.2054
+,,90,65,66,3,3,auto,AM,18.7494
+,,91,35,44,3,3,auto,AM,18.7144
+,,92,57,55,3,3,auto,AM,18.6571
+,,93,25,47,3,3,auto,AM,17.6662
+,,94,47,25,3,3,auto,AM,17.6452
+,,95,33,45,3,3,auto,AM,17.5809
+,,96,65,36,3,3,auto,AM,17.5661
+,,97,35,56,3,3,auto,AM,17.4437
+,,98,44,35,3,3,auto,AM,17.3625
+,,99,25,65,3,3,auto,AM,17.3391
+,,100,43,45,3,3,auto,AM,17.3062
+, # of capacity records in supply_side_scenario.csv=,0,
+, # of sa records in supply_side_scenario.csv=,0,
+, # of incident records in supply_side_scenario.csv=,0,
+, # of dms records in supply_side_scenario.csv=,0,
+Step 3: check OD connectivity and accessibility in od_accessibility.csv
+, # of connected OD pairs =, 930
+, # of OD/agent_type/demand_type columns without paths =, 0
+Iteration, CPU Running Time, # of agents, Avg Travel Time(min),  Avg UE gap %
+0,0,7901.96,0,-100
+1,0,7901.96,0,-100
+2,0,7901.96,4.29378,0.107391
+3,0,7901.96,4.29378,0.107391
+4,0,7901.96,4.28723,0.032217
+5,0,7901.96,4.28689,0.0441717
+6,0,7901.96,4.28661,0.0316878
+7,0,7901.96,4.28664,0.0264344
+8,0,7901.96,4.28676,0.0167152
+9,0,7901.96,4.287,0.0138391
+10,0,7901.96,4.28727,0.0131829
+11,0,7901.96,4.28731,0.00881003
+12,0,7901.96,4.2874,0.00616266
+13,0,7901.96,4.28752,0.005274
+14,0,7901.96,4.28766,0.00461302
+15,0,7901.96,4.28781,0.00280164
+16,0,7901.96,4.28797,0.00321087
+17,0,7901.96,4.28809,0.00308184
+18,0,7901.96,4.28814,0.00180584
+19,0,7901.96,4.28821,0.00161071
+Step 4: Column Generation for Traffic Assignment
+column updating
+Step 6: column pool-based flow updating for traffic assignment 
+,# of flow updating iterations=,0
+ODME stage
+Step 4.3: OD estimation 
+,# of ODME_iterations=,0
+Sensitivity analysis stage
+,Iteration,Avg Travel Time(min)
+0,4.2879,
+column updating
+Step 5: traffic simulataion. 
+, system - wide information activation time = 99999 in min
+, # of simulated agents in agent.csv=,7874,
+,simu time=,0 min, CA =,0,CD=,0, speed=,60, travel time =,0,CI=,0,CR=,0
+,simu time=,10 min, CA =,748,CD=,118, speed=,38.717, travel time =,3.4262,CI=,0,CR=,0
+,simu time=,20 min, CA =,2049,CD=,1241, speed=,37.591, travel time =,5.3489,CI=,0,CR=,0
+,simu time=,30 min, CA =,3371,CD=,2486, speed=,35.83, travel time =,5.8138,CI=,0,CR=,0
+,simu time=,40 min, CA =,4693,CD=,3735, speed=,33.955, travel time =,6.1635,CI=,0,CR=,0
+,simu time=,50 min, CA =,5990,CD=,4962, speed=,32.65, travel time =,6.4354,CI=,0,CR=,0
+,simu time=,60 min, CA =,7295,CD=,6175, speed=,31.609, travel time =,6.6687,CI=,0,CR=,0
+,simu time=,70 min, CA =,7874,CD=,7834, speed=,30.451, travel time =,6.9012,CI=,0,CR=,0
+,simu time=,80 min, CA =,7874,CD=,7874, speed=,30.56, travel time =,6.9027,CI=,0,CR=,0
+,simu time=,90 min, CA =,7874,CD=,7874, speed=,30.56, travel time =,6.9027,CI=,0,CR=,0
+,simu time=,100 min, CA =,7874,CD=,7874, speed=,30.56, travel time =,6.9027,CI=,0,CR=,0
+,simu time=,110 min, CA =,7874,CD=,7874, speed=,30.56, travel time =,6.9027,CI=,0,CR=,0
+,simu time=,120 min, CA =,7874,CD=,7874, speed=,30.56, travel time =,6.9027,CI=,0,CR=,0
+,summary by multi-modal agents,agent_type,#_agents,avg_distance,avg_travel_time_in_min,avg_free_speed,
+,,auto,7874,3.5158,6.9027,30.56
+,total_impacted_vehicles=,0,
+,total_diverted_vehicle_count=,0,,precentage=,0%, avg travel time =, 0, avg distance =, 0
+,total_diverted_DMS_veh_count=,0,,precentage=,0%, avg travel time =, 0, avg distance =, 0
+,total_non_diverted_vehicle_count=,0,,precentage=,0%, avg travel time =, 0, avg distance =, 0
+Output Link Performance:
+,ref_link_vol_count=,0,MAPE=,0%
+,VMT=,27870,VKT=,44843
+,VHT=,564.67
+,network vehicle speed (MPH) =,49.357,,network vehicle speed (KPH) =,79.415
+,PMT=,27870,PKT=,44843
+,PHT=,564.67
+,network person speed (MPH) =,49.357,,network person speed (KPH) =,79.415
+,simple avg link volume=,213.71
+,simple avg link speed=,50.072
+,simple avg link speed ratio=,0.99917
+, # of simulated agents in trajectory.csv=,7875,avg # of nodes per agent=42.335

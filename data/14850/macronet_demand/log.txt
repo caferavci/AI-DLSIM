@@ -1,0 +1,260 @@
+LoadingStartTimeInMin = 420
+g_LoadingStartTimeInMin = 480
+number_of_simulation_intervals = 28802
+number_of_simu intervals in sec = 7200
+allocate 2D dynamic memory LinkOutFlowCapacity...
+allocate 2D dynamic memory m_LinkCumulativeArrivalVector...
+allocate 2D dynamic memory m_LinkCumulativeDepartureVector...
+allocate 2D dynamic memory m_link_TD_waiting_time...
+initializing time dependent capacity data...
+End of initializing time dependent capacity data.
+system-wide information activation time = 99999 in min
+number of simulation zones:31
+generating 7 K agents
+simu time= 0 min, CA = 0 CD=0, speed=60, travel time = 0,CI=0,CR=0
+simu time= 10 min, CA = 748 CD=118, speed=38.72, travel time = 3.426,CI=0,CR=0
+simu time= 20 min, CA = 2049 CD=1241, speed=37.59, travel time = 5.349,CI=0,CR=0
+simu time= 30 min, CA = 3371 CD=2486, speed=35.83, travel time = 5.814,CI=0,CR=0
+simu time= 40 min, CA = 4693 CD=3735, speed=33.95, travel time = 6.163,CI=0,CR=0
+simu time= 50 min, CA = 5990 CD=4962, speed=32.65, travel time = 6.435,CI=0,CR=0
+simu time= 60 min, CA = 7295 CD=6175, speed=31.61, travel time = 6.669,CI=0,CR=0
+simu time= 70 min, CA = 7874 CD=7834, speed=30.45, travel time = 6.901,CI=0,CR=0
+simu time= 80 min, CA = 7874 CD=7874, speed=30.56, travel time = 6.903,CI=0,CR=0
+simu time= 90 min, CA = 7874 CD=7874, speed=30.56, travel time = 6.903,CI=0,CR=0
+simu time= 100 min, CA = 7874 CD=7874, speed=30.56, travel time = 6.903,CI=0,CR=0
+simu time= 110 min, CA = 7874 CD=7874, speed=30.56, travel time = 6.903,CI=0,CR=0
+simu time= 120 min, CA = 7874 CD=7874, speed=30.56, travel time = 6.903,CI=0,CR=0
+typess = 1
+Step 1.3: Reading zone data in zone.csv...
+reading 1 access nodes from zone.csv.. 
+reading 2 access nodes from zone.csv.. 
+reading 3 access nodes from zone.csv.. 
+reading 4 access nodes from zone.csv.. 
+reading 5 access nodes from zone.csv.. 
+reading 6 access nodes from zone.csv.. 
+reading 7 access nodes from zone.csv.. 
+reading 8 access nodes from zone.csv.. 
+reading 9 access nodes from zone.csv.. 
+reading 10 access nodes from zone.csv.. 
+reading 11 access nodes from zone.csv.. 
+reading 12 access nodes from zone.csv.. 
+reading 13 access nodes from zone.csv.. 
+reading 14 access nodes from zone.csv.. 
+reading 15 access nodes from zone.csv.. 
+reading 16 access nodes from zone.csv.. 
+reading 17 access nodes from zone.csv.. 
+reading 18 access nodes from zone.csv.. 
+reading 19 access nodes from zone.csv.. 
+reading 20 access nodes from zone.csv.. 
+reading 21 access nodes from zone.csv.. 
+reading 22 access nodes from zone.csv.. 
+reading 23 access nodes from zone.csv.. 
+reading 24 access nodes from zone.csv.. 
+reading 25 access nodes from zone.csv.. 
+reading 26 access nodes from zone.csv.. 
+reading 27 access nodes from zone.csv.. 
+reading 28 access nodes from zone.csv.. 
+reading 29 access nodes from zone.csv.. 
+reading 30 access nodes from zone.csv.. 
+reading 31 access nodes from zone.csv.. 
+Step 1.4: Reading node data in node.csv...
+Reading node data at layer0
+number of nodes = 1855
+number of multimodal activity nodes = 0
+number of zones = 31
+Step 1.5: Initializing O-D zone vector...
+number of zones = 31
+
+Step 1.8: Reading file section [demand_file_list] in setting.csv...
+Step 1.6: Reading link data in link.csv... 
+link layer= 0
+number of links =4534
+number of links =4534
+Step 1.91: Reading file section [real_time_info] in setting.csv...
+Step 1.9: Reading file section [output_file_configuration] in setting.csv...
+dynamic_link_performance_sampling_interval_in_min= 60 min
+dynamic_link_performance_sampling_interval_hd_in_min= 15 min
+dynamic_link_performance_sampling_interval_in_min= 60 min
+dynamic_link_performance_sampling_interval_hd_in_min= 15 min
+Step 2.1: Reading demand side scenario data...
+
+Step 1.8: Reading file section [departure_time_profile] in setting.csv...
+allocating 4D memory for 0 zones,nM=31,nX=31,nY=1,nZ=1
+
+Step 1.8: Reading file section [demand_file_list] in setting.csv...
+o_zone_id:22, d_zone_id: 24, value = 0.19853
+o_zone_id:22, d_zone_id: 25, value = 0.79263
+o_zone_id:22, d_zone_id: 26, value = 0.067755
+o_zone_id:22, d_zone_id: 33, value = 0.34157
+o_zone_id:22, d_zone_id: 34, value = 0.20891
+o_zone_id:22, d_zone_id: 35, value = 1.0015
+total demand volume is 7902
+crtical demand volume has 256 OD pairs in size,7033.1, , account for 89.004%%
+crtical OD zones volume has 256 OD pairs in size,7033.1, , account for 89.004%%
+Step 2.0: Reading supply side scenario data...
+Step 2: Assigning computing tasks to memory blocks...
+There are 4 SP networks in memory.
+There are 31 agent type*zones to be computed in CPU.
+
+Step 4: Column Generation for Traffic Assignment...
+Total Column Generation iteration: 20
+
+Current iteration number:0
+Current CPU time: 0.019 s
+label correcting for zone 0 in processor 0
+iteration: 0,systemTT: 0
+iteration: 0,systemTT: 0, least system TT:33776,gap=-1
+writing od_accessibility.csv..
+writing data for 31  zones 
+, # of connected OD pairs = 930
+
+Current iteration number:1
+Current CPU time: 13.714 s
+label correcting for zone 0 in processor 0
+iteration: 1,systemTT: 0
+iteration: 1,systemTT: 0, least system TT:33776,gap=-1
+
+Current iteration number:2
+Current CPU time: 21.467 s
+label correcting for zone 0 in processor 0
+iteration: 2,systemTT: 33929
+iteration: 2,systemTT: 33929, least system TT:33893,gap=0.0010739
+
+Current iteration number:3
+Current CPU time: 29.052 s
+label correcting for zone 0 in processor 0
+iteration: 3,systemTT: 33929
+iteration: 3,systemTT: 33929, least system TT:33893,gap=0.0010739
+
+Current iteration number:4
+Current CPU time: 35.399 s
+label correcting for zone 0 in processor 0
+iteration: 4,systemTT: 33878
+iteration: 4,systemTT: 33878, least system TT:33867,gap=0.00032217
+
+Current iteration number:5
+Current CPU time: 42.254 s
+label correcting for zone 0 in processor 0
+iteration: 5,systemTT: 33875
+iteration: 5,systemTT: 33875, least system TT:33860,gap=0.00044172
+
+Current iteration number:6
+Current CPU time: 48.188 s
+label correcting for zone 0 in processor 0
+iteration: 6,systemTT: 33873
+iteration: 6,systemTT: 33873, least system TT:33862,gap=0.00031688
+
+Current iteration number:7
+Current CPU time: 54.638 s
+label correcting for zone 0 in processor 0
+iteration: 7,systemTT: 33873
+iteration: 7,systemTT: 33873, least system TT:33864,gap=0.00026434
+
+Current iteration number:8
+Current CPU time: 61.895 s
+label correcting for zone 0 in processor 0
+iteration: 8,systemTT: 33874
+iteration: 8,systemTT: 33874, least system TT:33868,gap=0.00016715
+
+Current iteration number:9
+Current CPU time: 68.271 s
+label correcting for zone 0 in processor 0
+iteration: 9,systemTT: 33876
+iteration: 9,systemTT: 33876, least system TT:33871,gap=0.00013839
+
+Current iteration number:10
+Current CPU time: 74.991 s
+label correcting for zone 0 in processor 0
+iteration: 10,systemTT: 33878
+iteration: 10,systemTT: 33878, least system TT:33873,gap=0.00013183
+
+Current iteration number:11
+Current CPU time: 81.043 s
+label correcting for zone 0 in processor 0
+iteration: 11,systemTT: 33878
+iteration: 11,systemTT: 33878, least system TT:33875,gap=8.81e-05
+
+Current iteration number:12
+Current CPU time: 87.475 s
+label correcting for zone 0 in processor 0
+iteration: 12,systemTT: 33879
+iteration: 12,systemTT: 33879, least system TT:33877,gap=6.1627e-05
+
+Current iteration number:13
+Current CPU time: 95.171 s
+label correcting for zone 0 in processor 0
+iteration: 13,systemTT: 33880
+iteration: 13,systemTT: 33880, least system TT:33878,gap=5.274e-05
+
+Current iteration number:14
+Current CPU time: 102.24 s
+label correcting for zone 0 in processor 0
+iteration: 14,systemTT: 33881
+iteration: 14,systemTT: 33881, least system TT:33879,gap=4.613e-05
+
+Current iteration number:15
+Current CPU time: 109.13 s
+label correcting for zone 0 in processor 0
+iteration: 15,systemTT: 33882
+iteration: 15,systemTT: 33882, least system TT:33881,gap=2.8016e-05
+
+Current iteration number:16
+Current CPU time: 115.71 s
+label correcting for zone 0 in processor 0
+iteration: 16,systemTT: 33883
+iteration: 16,systemTT: 33883, least system TT:33882,gap=3.2109e-05
+
+Current iteration number:17
+Current CPU time: 122.52 s
+label correcting for zone 0 in processor 0
+iteration: 17,systemTT: 33884
+iteration: 17,systemTT: 33884, least system TT:33883,gap=3.0818e-05
+
+Current iteration number:18
+Current CPU time: 128.39 s
+label correcting for zone 0 in processor 0
+iteration: 18,systemTT: 33885
+iteration: 18,systemTT: 33885, least system TT:33884,gap=1.8058e-05
+
+Current iteration number:19
+Current CPU time: 133.94 s
+label correcting for zone 0 in processor 0
+iteration: 19,systemTT: 33885
+iteration: 19,systemTT: 33885, least system TT:33885,gap=1.6107e-05
+,# of column generation (shortest path finding) iterations=, 20
+
+Step 4.2: Column Pool Updating
+Total Column Pool Updating iteration: 0
+
+Step 4.3: OD estimation for traffic assignment..
+
+
+Step 5: Column Re-Generation for Traffic Assignment...
+Total Column Re-Generation iteration: 0
+
+SA: iteration number:0
+SA: CPU time: 3.489 s
+ updatingStep 5: Simulation for traffic assignment..
+writing agent.csv..
+writing data for 31  zones 
+CPU Running Time for traffic simulation: 0 s
+
+Done!
+CPU Running Time for the entire computing progcess: 6416.8 s
+writing link_performance.csv..
+writing route_assignment.csv..
+writing link_background_volume.csv..
+writing data for 31  zones 
+writing link_queue_profile.csv..
+writing TD_link_performance.csv..
+writing dynamic_link_state.csv..
+writing trajectory.bin..
+writing data for 31  zones 
+Comlete writing 7K binary agents with CPU time 5.283 s.
+writing trajectory.csv..
+writing data for 31  zones 
+Output for assignment with 20 iterations. Traffic assignment completes!
+CPU Running Time for outputting simulation results: 196.1 s
+free memory..
+CPU Running Time for Entire Process: 113 min 52 sec
+done.
