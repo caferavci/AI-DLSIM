@@ -8,10 +8,6 @@ from torch.utils.checkpoint import checkpoint
 import torch.optim as optim
 import math
 
-
-# First NUM_DYNAMIC_FEATURES columns of F_in are density, flow, speed, queue (see get_dynamic_features).
-NUM_DYNAMIC_FEATURES = 4
-
 class TrafficEncoding(nn.Module):
     def __init__(self, num_features, d_model):
         """        
@@ -218,10 +214,11 @@ class DecoderLayer(nn.Module):
         return x
 
 class Transformer(nn.Module):
-    def __init__(self, num_input_features, d_model, num_heads, num_layers, d_ff, p, spatial_groups=None, use_checkpoint=True, num_predict_features=None):
+    def __init__(self, num_input_features, num_predict_features, d_model, num_heads, num_layers, d_ff, p, spatial_groups=None, use_checkpoint=True):
         """
         Inputs:
-            num_input_features: Feature dim per cell going into the encoder (e.g. 12 = dynamic + static).
+            num_input_features: Feature dim per cell going into the encoder (i.e. static + dynamic).
+            num_predict_features: Output dim per cell (i.e. dynamic only).
             d_model: The dimension of the embeddings.
             num_heads: Number of heads to use for mult-head attention.
             num_layers: Number of encoder layers.
@@ -229,12 +226,11 @@ class Transformer(nn.Module):
             p: Dropout probability.
             spatial_groups: List of lists of cell indices for each group.
             use_checkpoint: Whether to use checkpointing.
-            num_predict_features: Output dim per cell (default: NUM_DYNAMIC_FEATURES only).
         """
         super(Transformer, self).__init__()
 
-        if num_predict_features is None:
-            num_predict_features = NUM_DYNAMIC_FEATURES
+        # if num_predict_features is None:
+            # num_predict_features = NUM_DYNAMIC_FEATURES
 
         self.num_input_features = num_input_features
         self.num_predict_features = num_predict_features
@@ -320,7 +316,7 @@ def get_static_features(link_filepath):
     links_df = pd.read_csv(link_filepath)
 
     dt = 5 / 3600  # 5 seconds in hours
-    link_type_onehot = pd.get_dummies(links_df["link_type"]).values
+    link_type_onehot = pd.get_dummies(links_df["link_type"]).values # 8 values for link type
 
     cells = []
     cell_features = []
@@ -331,7 +327,7 @@ def get_static_features(link_filepath):
         lanes = row["lanes"]
         capacity = row["capacity"]
 
-        cell_length = free_speed * dt
+        cell_length = (free_speed * 1000) * dt
         # Get number of cells for each link
         n_cells = math.ceil(length / cell_length)
 
@@ -362,12 +358,20 @@ def get_static_features(link_filepath):
 
 def get_dynamic_features(dynamic_filepath, cells):
     """
-    Builds time-varying traffic state per cell
-    Input: 
-        dynamic_filepath: link_performance.csv
-        cells: cell indices
+    Builds time-varying traffic state per cell.
+
+    Supports two CSV layouts:
+
+    * Macronet ``td_link_performance.csv``: hourly ``time_period`` strings like
+      ``0600:00.000_0700:00.000``, columns ``speed``, ``density``, ``queue_ratio``.
+      Same values are broadcast to every cell on ``link_id``.
+
+    Input:
+        dynamic_filepath: path to performance CSV
+        cells: list of (link_id, cell_index_on_link)
+
     Output:
-        dynamic_features: dynamic features of each cell
+        dynamic_features: array (T, N, F_dyn)
         T: number of timesteps
     """
     N = len(cells)
@@ -378,38 +382,60 @@ def get_dynamic_features(dynamic_filepath, cells):
 
     demand_df = pd.read_csv(dynamic_filepath)
 
-    unique_times = sorted(demand_df["time_period"].unique())
+    unique_times = sorted(demand_df["time_period"].astype(str).unique())
     time_to_idx = {t: i for i, t in enumerate(unique_times)}
-    demand_df["t_idx"] = demand_df["time_period"].map(time_to_idx)
+    demand_df = demand_df.assign(t_idx=demand_df["time_period"].astype(str).map(time_to_idx))
     T = len(unique_times)
 
-    F_dyn = 4  # density, flow, speed, queue
-
-    dynamic_features = np.zeros((T, N, F_dyn))
+    # if "queue_ratio" in demand_df.columns:
+    # Macronet hourly link performance — predict speed, density, queue_ratio per cell
+    F_dyn = 3
+    dynamic_features = np.zeros((T, N, F_dyn), dtype=np.float64)
 
     for _, row in demand_df.iterrows():
-        t = row["t_idx"]
+        t = int(row["t_idx"])
         link_id = row["link_id"]
 
         if link_id not in link_to_cells:
             continue
 
-        density = row["density"]
-        flow = row["volume"]
-        speed = row["RT_speed"]
+        speed = float(row["speed"])
+        density = float(row["density"])
+        queue_ratio = float(row["queue_ratio"])
 
-        k_jam = 120 * row["lanes"]
-        queue = k_jam * row["queue_link_distance_in_km"]
-
+        vec = np.array([speed, density, queue_ratio], dtype=np.float64)
         for cell_idx in link_to_cells[link_id]:
-            dynamic_features[t, cell_idx, :] = [
-                density,
-                flow,
-                speed,
-                queue
-            ]
+            dynamic_features[t, cell_idx, :] = vec
 
-    return dynamic_features, T
+    return dynamic_features.astype(np.float32), T
+
+    # # Legacy dynamic_link_performance.csv
+    # F_dyn = 4  # density, flow, speed, queue (derived)
+    # dynamic_features = np.zeros((T, N, F_dyn), dtype=np.float32)
+
+    # for _, row in demand_df.iterrows():
+    #     t = int(row["t_idx"])
+    #     link_id = row["link_id"]
+
+    #     if link_id not in link_to_cells:
+    #         continue
+
+    #     density = row["density"]
+    #     flow = row["volume"]
+    #     speed = row["speed"]
+
+    #     k_jam = 120 * row["lanes"]
+    #     queue = k_jam * row["queue_link_distance_in_km"]
+
+    #     for cell_idx in link_to_cells[link_id]:
+    #         dynamic_features[t, cell_idx, :] = [
+    #             density,
+    #             flow,
+    #             speed,
+                # queue
+    #         ]
+
+    # return dynamic_features, T
 
 def build_spatial_groups(cells, neighbor_window=3):
     """
@@ -446,7 +472,7 @@ def get_training_samples(X, lookback_window, T):
     targets = []
 
     for t in range(T - lookback_window):
-        x = X[t:t+lookback_window]   # (T, N, F)
+        x = X[t:t+lookback_window]   # (lookback_window, N, F)
         y = X[t+lookback_window]       # (N, F)
 
         inputs.append(x)
@@ -479,36 +505,46 @@ def main():
     d_ff = 128
     max_seq_length = 40
     dropout = 0.1
-    num_features = 12
     transformer_epochs = 5
     lr = 0.0001
 
     # Get static features
-    cells, static_features = get_static_features("micro_link.csv")
-    MAX_CELLS = 1000 # Run on subset of cells
-    cells = cells[:MAX_CELLS]
-    static_features = static_features[:MAX_CELLS] # (MAX_CELLS, 8)
+    cells, static_features = get_static_features("14850/data/link.csv")
+    print("cells:", len(cells))
+    # MAX_CELLS = 5000 # Run on subset of cells
+    # cells = cells[:MAX_CELLS]
+    # static_features = static_features[:MAX_CELLS]
 
     spatial_groups = build_spatial_groups(cells, neighbor_window=1)
 
-    # Get dynamic features
-    dynamic_features, T_total = get_dynamic_features("dynamic_link_performance.csv", cells)
+    # Macronet hourly performance (speed, density, queue_ratio) or legacy CSV
+    dynamic_features, T = get_dynamic_features("14850/data/td_link_performance.csv", cells)
+    num_dynamic_features = dynamic_features.shape[-1]
+    num_input_features = num_dynamic_features + static_features.shape[1]
 
-    static_expanded = np.repeat(static_features[np.newaxis, :, :], T_total, axis=0)
+    static_expanded = np.repeat(static_features[np.newaxis, :, :], T, axis=0)
 
     # Concatenate dynamic and static features
-    X = np.concatenate([dynamic_features, static_expanded], axis=-1) # (T, MAX_CELLS, 12)
+    X = np.concatenate([dynamic_features, static_expanded], axis=-1) # (T, MAX_CELLS, F)
+
+    print("X:", X.shape)
+    np.savetxt('14850/results/14850_features.csv', X[0, :, :], delimiter=',', fmt='%10.5f')
 
     # Normalize features
     X_mean = X.mean(axis=(0, 1), keepdims=True)
     X_std = X.std(axis=(0, 1), keepdims=True) + 1e-8
-    X = (X - X_mean) / X_std   
+    X = (X - X_mean) / X_std    # (T, MAX_CELLS, F)
 
     # Get supervised training samples
-    inputs, targets = get_training_samples(X, 1, T_total)
-    inputs = np.array(inputs)  # (B, T, N, F_in)
-    targets = np.array(targets)[:, :, :NUM_DYNAMIC_FEATURES]  # (B, N, 4) — supervise dynamic only
-    np.savetxt('targets.csv', targets[0, :, :], delimiter=',', fmt='%10.5f')
+    lookback_window = 3
+    inputs, targets = get_training_samples(X, lookback_window, T)
+    inputs = np.array(inputs)  # (B, lookback_window, N, F_in)
+    targets_all = np.array(targets)# (B, N, F_out)
+    targets = targets_all[:, :, :num_dynamic_features] # (B, N, F_out)
+    print("targets:", targets.shape) # (10, 5000, 3)
+    # np.savetxt('results/14850_targets_norm.csv', targets[0], delimiter=',', fmt='%10.5f')
+    targets_real = targets_all * X_std[0, 0, :] + X_mean[0, 0, :]
+    # np.savetxt('results/14850_targets.csv', targets_real[0,:,:num_dynamic_features], delimiter=',', fmt='%10.5f')
 
     dataset = TrafficDataset(inputs, targets)
     dataloader = DataLoader(dataset, batch_size=1)
@@ -517,14 +553,14 @@ def main():
 
     criterion = nn.MSELoss()
     transformer = Transformer(
-        num_input_features=num_features,
+        num_input_features=num_input_features,
+        num_predict_features=num_dynamic_features,
         d_model=d_model,
         num_heads=num_heads,
         num_layers=num_layers,
         d_ff=d_ff,
         p=dropout,
         spatial_groups=spatial_groups,
-        num_predict_features=NUM_DYNAMIC_FEATURES,
     ).to(device)
     optimizer = optim.Adam(transformer.parameters(), lr=lr, betas=(0.9, 0.98), eps=1e-9)
     
@@ -533,18 +569,26 @@ def main():
 
     # Predict next-step states
     sample_inputs, sample_labels = next(iter(dataloader))
-    mean_dyn = X_mean[:, :, :NUM_DYNAMIC_FEATURES]
-    std_dyn = X_std[:, :, :NUM_DYNAMIC_FEATURES]
+    print("sample_inputs:", sample_inputs.shape) # (1, 3, 5000, 11)
+    print("sample_labels:", sample_labels.shape) # (1, 5000, 3)
+    mean_dyn = X_mean[:, :, :num_dynamic_features]
+    std_dyn = X_std[:, :, :num_dynamic_features]
 
     target_norm = sample_labels[0].numpy()
     target_real = target_norm * std_dyn[0, 0, :] + mean_dyn[0, 0, :]
-    np.savetxt('target_states.csv', target_real, delimiter=',', fmt='%10.5f')
+    print("target_real:", target_real.shape) # (5000, 3)
+    np.savetxt('14850/results/14850_target_states.csv', target_real, delimiter=',', fmt='%10.5f')
 
-    predicted_states = predict_next_states(transformer, sample_inputs, device)  # (B, N, 4)
+    predicted_states = predict_next_states(transformer, sample_inputs, device)
+    print("predicted_states:", predicted_states.shape) # (1, 5000, 3)
 
     pred_norm = predicted_states[0].numpy()
     pred_real = pred_norm * std_dyn[0, 0, :] + mean_dyn[0, 0, :]
-    np.savetxt('predicted_states.csv', pred_real, delimiter=',', fmt='%10.5f')
+    np.savetxt('14850/results/14850_predicted_states.csv', pred_real, delimiter=',', fmt='%10.5f')
+
+    pred_loss = nn.MSELoss()(torch.tensor(target_norm), torch.tensor(pred_norm))
+    print("Predicted loss:", pred_loss)
+    print(pred_loss.item())
 
 
 
