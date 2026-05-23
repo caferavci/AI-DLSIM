@@ -7,6 +7,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.utils.checkpoint import checkpoint
 import torch.optim as optim
 import math
+# from datetime import datetime
 
 class TrafficEncoding(nn.Module):
     def __init__(self, num_features, d_model):
@@ -95,18 +96,14 @@ class MultiHeadAttention(nn.Module):
         B, seq_len, _ = x.shape
         return x.view(B, seq_len, self.num_heads, self.d_k).permute(0, 2, 1, 3) # (B, num_heads, seq_len, d_k)
 
-    def compute_attention(self, Q, K, V, mask=None):
+    def compute_attention(self, Q, K, V, mask):
         """
         Returns attention between Q, K, and V.
         """
         scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)  # (B, num_heads, seq_len, seq_len)
 
-        # triangular mask
-        if mask is not None:
-            scores = scores.masked_fill(mask == 0, float('-inf'))
-
-        weights = F.softmax(scores, dim=-1)
-        attention = weights @ V # attention: (B, num_heads, n_cells/T, d_k)
+        weights = F.softmax(scores + mask, dim=-1)
+        attention = weights @ V # (B, num_heads, seq_len, d_k)
         return attention
 
     def combine_heads(self, x):
@@ -116,17 +113,20 @@ class MultiHeadAttention(nn.Module):
         B, _, seq_len, _ = x.size()
         return x.permute(0, 2, 1, 3).contiguous().view(B, seq_len, self.d_model)
 
-    def forward(self, x, mask=None):
-        Q = self.W_q(x) # x: (B, n_cells/T, d_model), Q: (B, n_cells/T, d_model)
+    def forward(self, x, mask):
+        # x,Q,K,V: (B, seq_len, d_model) 
+        # seq_len is num cells or T
+        Q = self.W_q(x)
         K = self.W_k(x)
         V = self.W_v(x)
 
-        Q = self.split_heads(Q) # Q: (T, num_heads, n_cells, d_k)
+        # Q,K,V: (B, seq_len, num_heads, d_k)
+        Q = self.split_heads(Q)
         K = self.split_heads(K)
         V = self.split_heads(V)
 
-        output = self.compute_attention(Q, K, V, mask) # output: (T, num_heads, n_cells, d_k)
-        output = self.combine_heads(output) # output: (T, n_cells, d_model)
+        output = self.compute_attention(Q, K, V, mask) # (B, num_heads, seq_len, d_k)
+        output = self.combine_heads(output) # (B, num_heads, seq_len, d_model)
         output = self.W_o(output)
 
         return output
@@ -175,18 +175,69 @@ class DecoderLayer(nn.Module):
         self.ff_norm = nn.LayerNorm(d_model)
         self.dropout = nn.Dropout(p)
 
+    def create_spatial_mask(self, N):
+        """
+        Create attention mask that only allows:
+            Upstream cell i -> 1 → cell i (flow propagation) 
+            Downstream cell i + 1 -> cell i (queue spillback)
+            Self-attention cell i -> cell i
+
+        Input:
+            N: number of cells
+        """
+        matrix = torch.zeros(N, N)
+
+        for i in range(N):
+            matrix[i,i] = 1
+            
+            if i > 0:
+                matrix[i, i-1] = 1
+            
+            if i < N-1:
+                matrix[i, i+1] = 1
+
+        spatial_mask = torch.where(
+            matrix > 0,
+            torch.tensor(0.0),
+            torch.tensor(float('-inf'))
+        )
+
+        spatial_mask = spatial_mask.unsqueeze(0).unsqueeze(0) # (1,1,N,N)
+
+        return spatial_mask
+
+    def create_temporal_mask(self, T):
+        """
+        Create causal mask: only past and current timesteps can affect a token
+
+        Input:
+            T: number of timesteps
+        """
+        matrix = torch.tril(torch.ones(T,T)) # Get lower triangular part, including main diagonal
+
+        temporal_mask = torch.where(
+            matrix > 0,
+            torch.tensor(0.0),
+            torch.tensor(float('-inf'))
+        )
+
+        temporal_mask = temporal_mask.unsqueeze(0).unsqueeze(0) # (1,1,T,T)
+
+        return temporal_mask
+
+
     def forward(self, x):
-        batch_size, t_steps, n_cells, d_model = x.shape
+        B, T, N, d_model = x.shape
 
         # Spatial attention over cells for each timestep
-        spatial_x = x.view(batch_size * t_steps, n_cells, d_model)
+        spatial_x = x.view(B * T, N, d_model)
         norm_x = self.spatial_attn_norm(spatial_x)
         if self.spatial_groups is None:
-            # Dense fallback: attends over all N cells.
-            attn_output = self.spatial_attn(norm_x)
+            # Only allow upstream cell and downstream cell attention
+            spatial_mask = self.create_spatial_mask(N)
+            attn_output = self.spatial_attn(norm_x, spatial_mask)
         else:
-            # Sparse-by-construction: run attention independently per group,
-            # which avoids allocating one global N x N score matrix.
+            # Run attention independently per group of cells, which avoids allocating one global N x N score matrix
             attn_output = torch.zeros_like(norm_x)
             for group_indices in self.spatial_groups:
                 idx = torch.as_tensor(group_indices, device=norm_x.device, dtype=torch.long)
@@ -195,15 +246,16 @@ class DecoderLayer(nn.Module):
                 attn_output[:, idx, :] = group_out
         attn_output = self.dropout(attn_output)
         spatial_x = spatial_x + attn_output
-        x = spatial_x.view(batch_size, t_steps, n_cells, d_model)
+        x = spatial_x.view(B, T, N, d_model)
 
         # Temporal attention over timesteps for each cell
-        temporal_x = x.permute(0, 2, 1, 3).contiguous().view(batch_size * n_cells, t_steps, d_model)
+        temporal_x = x.permute(0, 2, 1, 3).contiguous().view(B * N, T, d_model)
         norm_x = self.temporal_attn_norm(temporal_x)
-        attn_output = self.temporal_attn(norm_x)
+        temporal_mask = self.create_temporal_mask(T)
+        attn_output = self.temporal_attn(norm_x, temporal_mask)
         attn_output = self.dropout(attn_output)
         temporal_x = temporal_x + attn_output
-        x = temporal_x.view(batch_size, n_cells, t_steps, d_model).permute(0, 2, 1, 3).contiguous()
+        x = temporal_x.view(B, N, T, d_model).permute(0, 2, 1, 3).contiguous()
 
         # Feed-Forward
         norm_x = self.ff_norm(x)
@@ -214,7 +266,7 @@ class DecoderLayer(nn.Module):
         return x
 
 class Transformer(nn.Module):
-    def __init__(self, num_input_features, num_predict_features, d_model, num_heads, num_layers, d_ff, p, spatial_groups=None, use_checkpoint=True):
+    def __init__(self, num_input_features, num_predict_features, d_model, num_heads, num_layers, d_ff, p, k_jam_tensor, X_mean, X_std, spatial_groups=None, use_checkpoint=True):
         """
         Inputs:
             num_input_features: Feature dim per cell going into the encoder (i.e. static + dynamic).
@@ -224,13 +276,13 @@ class Transformer(nn.Module):
             num_layers: Number of encoder layers.
             d_ff: Hidden dimension size for the feed-forward network.
             p: Dropout probability.
+            k_jam_tensor: jam densities
+            X_mean: feature means for normalization
+            X_std: feature stds for normalization
             spatial_groups: List of lists of cell indices for each group.
             use_checkpoint: Whether to use checkpointing.
         """
         super(Transformer, self).__init__()
-
-        # if num_predict_features is None:
-            # num_predict_features = NUM_DYNAMIC_FEATURES
 
         self.num_input_features = num_input_features
         self.num_predict_features = num_predict_features
@@ -244,7 +296,16 @@ class Transformer(nn.Module):
         self.final_norm = nn.LayerNorm(d_model)
         self.out_projection = nn.Linear(d_model, num_predict_features)
 
-    def forward(self, x):
+        self.register_buffer("k_jam", k_jam_tensor)
+
+        mean_tensor = torch.tensor(X_mean, dtype=torch.float32)
+        std_tensor = torch.tensor(X_std, dtype=torch.float32)
+        density_mean = mean_tensor[:,:,1]
+        density_std = std_tensor[:,:,1]
+        self.register_buffer("density_mean", density_mean)
+        self.register_buffer("density_std", density_std)
+
+    def forward(self, x, k_jam=None):
         x = self.encoding(x)
         x = self.dropout(x)
 
@@ -255,52 +316,21 @@ class Transformer(nn.Module):
                 x = layer(x)
 
         x = self.final_norm(x)
-        logits = self.out_projection(x)
+        raw_preds = self.out_projection(x) # (B, lookback window, N, F_out)
 
-        return logits
+        speed = raw_preds[..., 0:1]
+        density_raw = raw_preds[..., 1:2]
+        queue = raw_preds[..., 2:3]
 
-def train(model, train_loader, epochs, criterion, optimizer, device):
-    train_loss_arr = []
+        # Apply density bounds (cap at jam density)
+        density_physical = (density_raw * self.density_std) + self.density_mean
+        zeros = torch.zeros_like(self.k_jam)
+        density_bounded = torch.clamp(density_physical, min=zeros, max=self.k_jam)
+        density = (density_bounded - self.density_mean) / self.density_std
 
-    for epoch in range(epochs):
-        running_loss = 0.0
-        model.train()
-        for i, (inputs, labels) in enumerate(train_loader): # labels??
-            inputs, labels = inputs.to(device), labels.to(device)
+        output = torch.cat([speed, density, queue], dim=-1)
 
-            optimizer.zero_grad(set_to_none=True)
-            pred = model(inputs)
-            if labels.dim() == 3:
-                # labels are next-step targets: (B, N, num_predict_features)
-                pred = pred[:, -1, :, :]
-            loss = criterion(pred, labels)
-            loss.backward()
-            optimizer.step()
-
-            running_loss += loss.item()
-        
-        avg_loss = running_loss / len(train_loader)
-
-        print(
-            "epoch:", epoch + 1, 
-            "training loss:", avg_loss,
-        )
-    
-    return train_loss_arr
-
-def predict_next_states(model, inputs, device):
-    """
-    Predict next-step states for a batch.
-
-    inputs: (B, T, N, F_in)
-    returns: (B, N, num_predict_features) — by default the dynamic channels only.
-    """
-    model.eval()
-    with torch.no_grad():
-        inputs = inputs.to(device)
-        pred = model(inputs)          # (B, T, N, num_predict_features)
-        next_state_pred = pred[:, -1] # (B, N, num_predict_features)
-    return next_state_pred.cpu()
+        return output
 
 
 def get_static_features(link_filepath):
@@ -322,20 +352,20 @@ def get_static_features(link_filepath):
     cell_features = []
 
     for i, row in links_df.iterrows():
-        free_speed = row["free_speed"]
-        length = row["length"]
+        free_speed = row["free_speed"] # kmph
+        length = row["length"] # meters
         lanes = row["lanes"]
         capacity = row["capacity"]
 
+        # meters travelled in 5 seconds
         cell_length = (free_speed * 1000) * dt
-        # Get number of cells for each link
+        # get number of cells for each link
         n_cells = math.ceil(length / cell_length)
 
-        k_jam = 120 * lanes
+        k_jam = 120 * lanes # vehicles per km
         k_crit = capacity / free_speed
         wave_speed = capacity / (k_jam - k_crit + 1e-6)
         Q_cell = capacity * dt
-        N_max = k_jam * cell_length 
 
         link_type = link_type_onehot[i]
 
@@ -387,7 +417,6 @@ def get_dynamic_features(dynamic_filepath, cells):
     demand_df = demand_df.assign(t_idx=demand_df["time_period"].astype(str).map(time_to_idx))
     T = len(unique_times)
 
-    # if "queue_ratio" in demand_df.columns:
     # Macronet hourly link performance — predict speed, density, queue_ratio per cell
     F_dyn = 3
     dynamic_features = np.zeros((T, N, F_dyn), dtype=np.float64)
@@ -408,34 +437,6 @@ def get_dynamic_features(dynamic_filepath, cells):
             dynamic_features[t, cell_idx, :] = vec
 
     return dynamic_features.astype(np.float32), T
-
-    # # Legacy dynamic_link_performance.csv
-    # F_dyn = 4  # density, flow, speed, queue (derived)
-    # dynamic_features = np.zeros((T, N, F_dyn), dtype=np.float32)
-
-    # for _, row in demand_df.iterrows():
-    #     t = int(row["t_idx"])
-    #     link_id = row["link_id"]
-
-    #     if link_id not in link_to_cells:
-    #         continue
-
-    #     density = row["density"]
-    #     flow = row["volume"]
-    #     speed = row["speed"]
-
-    #     k_jam = 120 * row["lanes"]
-    #     queue = k_jam * row["queue_link_distance_in_km"]
-
-    #     for cell_idx in link_to_cells[link_id]:
-    #         dynamic_features[t, cell_idx, :] = [
-    #             density,
-    #             flow,
-    #             speed,
-                # queue
-    #         ]
-
-    # return dynamic_features, T
 
 def build_spatial_groups(cells, neighbor_window=3):
     """
@@ -472,8 +473,8 @@ def get_training_samples(X, lookback_window, T):
     targets = []
 
     for t in range(T - lookback_window):
-        x = X[t:t+lookback_window]   # (lookback_window, N, F)
-        y = X[t+lookback_window]       # (N, F)
+        x = X[t:t+lookback_window] # (lookback_window, N, F)
+        y = X[t+lookback_window] # (N, F)
 
         inputs.append(x)
         targets.append(y)
@@ -497,6 +498,49 @@ class TrafficDataset(torch.utils.data.Dataset):
 
         return x, y
 
+def train(model, train_loader, epochs, criterion, optimizer, device):
+    train_loss_arr = []
+
+    for epoch in range(epochs):
+        running_loss = 0.0
+        model.train()
+        for i, (inputs, labels) in enumerate(train_loader):
+            inputs, labels = inputs.to(device), labels.to(device)
+
+            optimizer.zero_grad(set_to_none=True)
+            pred = model(inputs)
+            # if labels.dim() == 3:
+            # grab next-timestep prediction
+            pred = pred[:, -1, :, :]
+            loss = criterion(pred, labels)
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+        
+        avg_loss = running_loss / len(train_loader)
+
+        print(
+            "epoch:", epoch + 1, 
+            "training loss:", f"{avg_loss:.4f}",
+        )
+    
+    return train_loss_arr
+
+def predict_next_states(model, inputs, device):
+    """
+    Predict next-step states for a batch.
+
+    inputs: (B, T, N, F_in)
+    returns: (B, N, num_predict_features) — by default the dynamic channels only.
+    """
+    model.eval()
+    with torch.no_grad():
+        inputs = inputs.to(device)
+        pred = model(inputs)          # (B, T, N, num_predict_features)
+        next_state_pred = pred[:, -1] # (B, N, num_predict_features)
+    return next_state_pred.cpu()
+
 def main():
     # Hyperparameters
     d_model = 64
@@ -510,14 +554,12 @@ def main():
 
     # Get static features
     cells, static_features = get_static_features("14850/data/link.csv")
-    print("cells:", len(cells))
-    # MAX_CELLS = 5000 # Run on subset of cells
-    # cells = cells[:MAX_CELLS]
-    # static_features = static_features[:MAX_CELLS]
+    MAX_CELLS = 1000 # Run on subset of cells
+    cells = cells[:MAX_CELLS]
+    static_features = static_features[:MAX_CELLS]
 
     spatial_groups = build_spatial_groups(cells, neighbor_window=1)
 
-    # Macronet hourly performance (speed, density, queue_ratio) or legacy CSV
     dynamic_features, T = get_dynamic_features("14850/data/td_link_performance.csv", cells)
     num_dynamic_features = dynamic_features.shape[-1]
     num_input_features = num_dynamic_features + static_features.shape[1]
@@ -527,8 +569,13 @@ def main():
     # Concatenate dynamic and static features
     X = np.concatenate([dynamic_features, static_expanded], axis=-1) # (T, MAX_CELLS, F)
 
-    print("X:", X.shape)
-    np.savetxt('14850/results/14850_features.csv', X[0, :, :], delimiter=',', fmt='%10.5f')
+    # Save features to file
+    # timestamp = datetime.now()
+    # timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")
+    # np.savetxt(f'14850/results/14850_features_{timestamp}.csv', X[0, :, :], delimiter=',', fmt='%10.5f')
+
+    k_jam_array = X[0,:,5]
+    k_jam_tensor = torch.tensor(k_jam_array, dtype=torch.float32).view(1, 1, -1, 1)
 
     # Normalize features
     X_mean = X.mean(axis=(0, 1), keepdims=True)
@@ -541,10 +588,7 @@ def main():
     inputs = np.array(inputs)  # (B, lookback_window, N, F_in)
     targets_all = np.array(targets)# (B, N, F_out)
     targets = targets_all[:, :, :num_dynamic_features] # (B, N, F_out)
-    print("targets:", targets.shape) # (10, 5000, 3)
-    # np.savetxt('results/14850_targets_norm.csv', targets[0], delimiter=',', fmt='%10.5f')
     targets_real = targets_all * X_std[0, 0, :] + X_mean[0, 0, :]
-    # np.savetxt('results/14850_targets.csv', targets_real[0,:,:num_dynamic_features], delimiter=',', fmt='%10.5f')
 
     dataset = TrafficDataset(inputs, targets)
     dataloader = DataLoader(dataset, batch_size=1)
@@ -560,7 +604,10 @@ def main():
         num_layers=num_layers,
         d_ff=d_ff,
         p=dropout,
-        spatial_groups=spatial_groups,
+        k_jam_tensor=k_jam_tensor,
+        X_mean=X_mean,
+        X_std=X_std,
+        # spatial_groups=spatial_groups,
     ).to(device)
     optimizer = optim.Adam(transformer.parameters(), lr=lr, betas=(0.9, 0.98), eps=1e-9)
     
@@ -569,26 +616,23 @@ def main():
 
     # Predict next-step states
     sample_inputs, sample_labels = next(iter(dataloader))
-    print("sample_inputs:", sample_inputs.shape) # (1, 3, 5000, 11)
-    print("sample_labels:", sample_labels.shape) # (1, 5000, 3)
     mean_dyn = X_mean[:, :, :num_dynamic_features]
     std_dyn = X_std[:, :, :num_dynamic_features]
 
     target_norm = sample_labels[0].numpy()
     target_real = target_norm * std_dyn[0, 0, :] + mean_dyn[0, 0, :]
-    print("target_real:", target_real.shape) # (5000, 3)
-    np.savetxt('14850/results/14850_target_states.csv', target_real, delimiter=',', fmt='%10.5f')
+    # Save target dynamic states to file
+    # np.savetxt('14850/0521/results/14850_target_states.csv', target_real, delimiter=',', fmt='%10.5f')
 
     predicted_states = predict_next_states(transformer, sample_inputs, device)
-    print("predicted_states:", predicted_states.shape) # (1, 5000, 3)
 
     pred_norm = predicted_states[0].numpy()
     pred_real = pred_norm * std_dyn[0, 0, :] + mean_dyn[0, 0, :]
-    np.savetxt('14850/results/14850_predicted_states.csv', pred_real, delimiter=',', fmt='%10.5f')
+    # Save predicted dynamic states to file
+    # np.savetxt(f'14850/results/14850_predicted_states_{timestamp}.csv', pred_real, delimiter=',', fmt='%10.5f')
 
     pred_loss = nn.MSELoss()(torch.tensor(target_norm), torch.tensor(pred_norm))
-    print("Predicted loss:", pred_loss)
-    print(pred_loss.item())
+    print("Predicted loss:", f"{pred_loss.item():.2f}")
 
 
 
